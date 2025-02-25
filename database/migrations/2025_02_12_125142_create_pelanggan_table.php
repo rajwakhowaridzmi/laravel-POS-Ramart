@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('alamat', 200)->nullable();
             $table->string('no_telp', 20)->nullable();
             $table->string('email', 50)->nullable();
+            $table->enum('member_status', ['1', '0'])->nullable();
+            $table->double('total_poin')->nullable();
             $table->timestamps();
         });
     }

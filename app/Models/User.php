@@ -27,7 +27,9 @@ class User extends Authenticatable
         'password',
         'role'
     ];
-
+    public function isAdmin(){
+        return $this->role == 'admin';
+    }
     public function pembelian()
     {
         return $this->hasMany(Pembelian::class, 'user_id', 'user_id');
