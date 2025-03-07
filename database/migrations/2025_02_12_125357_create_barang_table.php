@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('kode_barang', 50)->unique();
             $table->unsignedBigInteger('produk_id')->nullable();
             $table->string('nama_barang', 50)->nullable();
-            $table->string('satuan', 10)->nullable();
             $table->double('harga_jual')->nullable();
             $table->integer('stok')->nullable();
             $table->enum('status_barang', ['0','1']);

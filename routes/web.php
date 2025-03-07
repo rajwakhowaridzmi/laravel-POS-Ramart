@@ -1,10 +1,15 @@
 <?php
 
 use App\Http\Middleware\RoleMiddleware;
+use App\Livewire\Admin\Barang\Barang;
+use App\Livewire\Admin\Barang\EditBarang;
+use App\Livewire\Admin\Barang\TambahBarang;
 use App\Livewire\Admin\DashboardAdmin;
 use App\Livewire\Admin\Pelanggan\EditPelanggan;
 use App\Livewire\Admin\Pelanggan\Pelanggan;
 use App\Livewire\Admin\Pelanggan\TambahPelanggan;
+use App\Livewire\Admin\Pembelian\Pembelian;
+use App\Livewire\Admin\Pembelian\TambahPembelian;
 use App\Livewire\Admin\Produk\EditProduk;
 use App\Livewire\Admin\Produk\Produk;
 use App\Livewire\Admin\Produk\TambahProduk;
@@ -37,6 +42,13 @@ Route::middleware(['auth', RoleMiddleware::class.':0'])->group(function () {
     Route::get('/pelanggan', Pelanggan::class)->name('pelanggan');
     Route::get('/tambah-pelanggan', TambahPelanggan::class)->name('tambah-pelanggan');
     Route::get('/edit-pelanggan/{pelanggan_id}', EditPelanggan::class)->name('edit-pelanggan');
+
+    Route::get('/barang', Barang::class)->name('barang');
+    Route::get('/tambah-barang', TambahBarang::class)->name('tambah-barang');
+    Route::get('/edit-barang/{barang_id}', EditBarang::class)->name('edit-barang');
+
+    Route::get('/pembelian', Pembelian::class)->name('pembelian');
+    Route::get('/tambah-pembelian', TambahPembelian::class)->name('tambah-pembelian');
 });
 
 Route::middleware(['auth', RoleMiddleware::class.':1'])->group(function () {

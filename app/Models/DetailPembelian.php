@@ -19,6 +19,11 @@ class DetailPembelian extends Model
         'jumlah',
         'sub_total'
     ];
+    protected $casts = [
+        'harga_beli' => 'double',
+        'jumlah' => 'integer',
+        'sub_total' => 'double',
+    ];
     public function pembelian() {
         return $this->belongsTo(Pembelian::class, 'pembelian_id', 'pembelian_id');
     }

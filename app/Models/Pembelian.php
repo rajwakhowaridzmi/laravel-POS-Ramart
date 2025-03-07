@@ -10,7 +10,7 @@ class Pembelian extends Model
     protected $primaryKey = 'pembelian_id';
     protected $keyType = 'int';
 
-    public $incrementing = false;
+    // public $incrementing = false;
     protected $fillable = [
         'pembelian_id',
         'kode_masuk',
