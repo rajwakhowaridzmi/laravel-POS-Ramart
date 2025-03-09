@@ -73,6 +73,11 @@
             <i class="bi bi-circle"></i><span>Daftar Pembelian</span>
           </a>
         </li>
+        <li>
+          <a wire:navigate href="/tambah-pembelian">
+            <i class="bi bi-circle"></i><span>Tambah Pembelian</span>
+          </a>
+        </li>
       </ul>
     </li><!-- End Components Nav -->
 

@@ -12,7 +12,12 @@
                         </ol>
                     </nav>
                 </div><!-- End Page Title -->
-
+                @if (session()->has('error'))
+                <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                    {{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                @endif
                 <section class="section">
                     <div class="row">
                         <div class="col-lg-12">
@@ -23,7 +28,7 @@
                                     <!-- General Form Elements -->
                                     <form wire:submit.prevent="store">
                                         <div class="row mb-3">
-                                            <label for="kode_barang" class="col-sm-2 col-form-label">Kode Produk</label>
+                                            <label for="kode_barang" class="col-sm-2 col-form-label">Kode Barang</label>
                                             <div class="col-sm-10">
                                                 <input type="text" class="form-control" id="kode_barang" wire:model="kode_barang">
                                                 @error('kode_barang')
@@ -60,20 +65,10 @@
                                         </div>
 
                                         <div class="row mb-3">
-                                            <label for="harga_jual" class="col-sm-2 col-form-label">Harga Jual</label>
+                                            <label for="persentase" class="col-sm-2 col-form-label">Keuntungan (%)</label>
                                             <div class="col-sm-10">
-                                                <input type="number" class="form-control" id="harga_jual" wire:model="harga_jual">
-                                                @error('harga_jual')
-                                                <div class="text-danger">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                        </div>
-
-                                        <div class="row mb-3">
-                                            <label for="stok" class="col-sm-2 col-form-label">Stok</label>
-                                            <div class="col-sm-10">
-                                                <input type="number" class="form-control" id="stok" wire:model="stok">
-                                                @error('stok')
+                                                <input type="number" class="form-control" id="persentase" wire:model="persentase">
+                                                @error('persentase')
                                                 <div class="text-danger">{{ $message }}</div>
                                                 @enderror
                                             </div>

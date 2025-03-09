@@ -17,7 +17,7 @@ class TambahPembelian extends Component
 
     public $searchPemasok = '', $filteredPemasok = [];
     public $searchBarang = '', $filteredBarang = [], $selectedBarang = [];
-    
+
     public function mount()
     {
         $this->pemasok = Pemasok::all();
@@ -72,19 +72,17 @@ class TambahPembelian extends Component
         list($index, $field) = explode('.', $key);
 
         if (in_array($field, ['harga_beli', 'jumlah'])) {
-            $harga = $this->selectedBarang[$index]['harga_beli'] ?? 0;
-            $jumlah = $this->selectedBarang[$index]['jumlah'] ?? 0;
+            $harga = (float) $this->selectedBarang[$index]['harga_beli'] ?? 0;
+            $jumlah = (int) $this->selectedBarang[$index]['jumlah'] ?? 0;
             $this->selectedBarang[$index]['sub_total'] = $harga * $jumlah;
         }
         $this->total = $this->getTotalProperty();
     }
 
-
     public function getTotalProperty()
     {
         return array_sum(array_column($this->selectedBarang, 'sub_total'));
     }
-
 
     public function store()
     {
@@ -95,27 +93,22 @@ class TambahPembelian extends Component
             'selectedBarang.*.harga_beli' => 'required|numeric|min:1',
             'selectedBarang.*.jumlah' => 'required|numeric|min:1',
         ]);
-
+    
         try {
             DB::beginTransaction();
 
             $tanggal = now()->format('Ymd');
             $lastKode = Pembelian::whereDate('created_at', now())->latest('created_at')->first();
-
-            $nomorUrut = 1;
-            if ($lastKode) {
-                $nomorUrut = (int) substr($lastKode->kode_masuk, -4) + 1;
-            }
-
+            $nomorUrut = $lastKode ? ((int) substr($lastKode->kode_masuk, -4) + 1) : 1;
             $kodeMasuk = 'PBL' . $tanggal . str_pad($nomorUrut, 4, '0', STR_PAD_LEFT);
-
+    
             $pembelian = Pembelian::create([
                 'kode_masuk' => $kodeMasuk,
                 'tanggal_masuk' => now()->format('Ymd'),
                 'pemasok_id' => $this->pemasok_id,
                 'user_id' => Auth::id(),
             ]);
-
+    
             foreach ($this->selectedBarang as $barang) {
                 DetailPembelian::create([
                     'pembelian_id' => $pembelian->pembelian_id,
@@ -124,18 +117,22 @@ class TambahPembelian extends Component
                     'jumlah' => $barang['jumlah'],
                     'sub_total' => $barang['sub_total'],
                 ]);
+    
+                $barangData = Barang::where('barang_id', $barang['barang_id'])->first();
+    
+                $harga_beli_baru = $barang['harga_beli'];
+                $persentase = $barangData->persentase;
+                $harga_jual_baru = $harga_beli_baru * (1 + ($persentase / 100));
+    
+                $barangData->update([
+                    'stok' => DB::raw('stok + ' . $barang['jumlah']),
+                    'harga_beli' => $harga_beli_baru,
+                    'harga_jual' => $harga_jual_baru,
+                ]);
             }
-
-            foreach ($this->selectedBarang as $barang) {
-                $barangs = Barang::find($barang['barang_id']);
-                if ($barangs) {
-                    $barangs->increment('stok', $barang['jumlah']);
-                }
-            }
-
+    
             DB::commit();
-
-
+    
             session()->flash('success', 'Pembelian berhasil disimpan dengan kode ' . $kodeMasuk);
             return redirect()->route('pembelian');
         } catch (\Exception $e) {
@@ -143,7 +140,7 @@ class TambahPembelian extends Component
             session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
-
+    
     public function render()
     {
         return view('livewire.admin.pembelian.tambah-pembelian');

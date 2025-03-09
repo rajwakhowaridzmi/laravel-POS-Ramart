@@ -8,6 +8,7 @@ use App\Livewire\Admin\DashboardAdmin;
 use App\Livewire\Admin\Pelanggan\EditPelanggan;
 use App\Livewire\Admin\Pelanggan\Pelanggan;
 use App\Livewire\Admin\Pelanggan\TambahPelanggan;
+use App\Livewire\Admin\Pembelian\DetailPembelian;
 use App\Livewire\Admin\Pembelian\Pembelian;
 use App\Livewire\Admin\Pembelian\TambahPembelian;
 use App\Livewire\Admin\Produk\EditProduk;
@@ -49,6 +50,7 @@ Route::middleware(['auth', RoleMiddleware::class.':0'])->group(function () {
 
     Route::get('/pembelian', Pembelian::class)->name('pembelian');
     Route::get('/tambah-pembelian', TambahPembelian::class)->name('tambah-pembelian');
+    Route::get('/detail-pembelian/{pembelian_id}', DetailPembelian::class)->name('detail-pembelian');
 });
 
 Route::middleware(['auth', RoleMiddleware::class.':1'])->group(function () {

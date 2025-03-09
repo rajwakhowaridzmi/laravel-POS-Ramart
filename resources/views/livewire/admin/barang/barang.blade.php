@@ -44,6 +44,7 @@
                                                 <th scope="col">Kode Barang</th>
                                                 <th scope="col">Nama Barang</th>
                                                 <th scope="col">Jenis Produk</th>
+                                                <th scope="col">Keuntungan</th>
                                                 <th scope="col">Harga Jual</th>
                                                 <th scope="col">Stok</th>
                                                 <th scope="col">Status Barang</th>
@@ -57,6 +58,7 @@
                                                 <td>{{ $barangs->kode_barang ?? '-'}}</td>
                                                 <td>{{ $barangs->nama_barang ?? '-'}}</td>
                                                 <td>{{ $barangs->produk->nama_produk ?? '-'}}</td>
+                                                <td>{{ $barangs->persentase ?? '-'}}%</td>
                                                 <td>{{ $barangs->harga_jual ?? '-'}}</td>
                                                 <td>{{ $barangs->stok ?? '-'}}</td>
                                                 <td>{{  $statusMapping[$barangs->status_barang] ?? '-'}}</td>

@@ -49,11 +49,10 @@
                                                 <td>{{ $pembelians->tanggal_masuk ?? '-'}}</td>
                                                 <td>{{ $pembelians->pemasok->nama_pemasok ?? '-'}}</td>
                                                 <td>
-                                                    <a wire:navigate href="/edit-produk/{{ $pembelians->pembelian_id}}" class="bi bi-pencil-square fs-3"></a>
-                                                    <a wire:click="confirmDelete('{{ $pembelians->pembelian_id }}')" class="bi bi-trash fs-3 cursor-pointer" data-bs-toggle="modal" data-bs-target="#konfirmasiHapusModal"></a>
+                                                    <a wire:navigate href="/detail-pembelian/{{ $pembelians->pembelian_id}}" class="bi bi-pencil-square fs-3"></a>
                                                 </td>
                                             </tr>
-                                            @endforeach
+                                            @endforeach 
                                         </tbody>
                                     </table>
                                 </div>
