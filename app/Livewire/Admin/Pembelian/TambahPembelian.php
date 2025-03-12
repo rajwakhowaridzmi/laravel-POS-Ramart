@@ -27,7 +27,7 @@ class TambahPembelian extends Component
     {
         $this->filteredPemasok = !empty($this->searchPemasok)
             ? Pemasok::where('nama_pemasok', 'like', '%' . $this->searchPemasok . '%')->get()
-            : [];
+            : ['Pemasok Tidak DItemukan'];
     }
     public function selectPemasok($pemasok_id, $nama_pemasok)
     {

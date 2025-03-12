@@ -4,13 +4,16 @@ namespace App\Livewire\Admin\Vendor;
 
 use App\Models\Pemasok as ModelsPemasok;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class Pemasok extends Component
 {
+    use WithPagination;
     public $pemasok_id;
+    protected $paginationTheme = 'bootstrap';
     public function render()
     {
-        $pemasoks = ModelsPemasok::all();
+        $pemasoks = ModelsPemasok::paginate(5);
         return view('livewire.admin.vendor.pemasok', ['pemasok' => $pemasoks ]);
     }
     public function delete(){

@@ -74,6 +74,22 @@
                                             </div>
                                         </div>
 
+                                        <div class="row mb-3">
+                                            <label for="gambar" class="col-sm-2 col-form-label">Gambar</label>
+                                            <div class="col-sm-10">
+                                                <input type="file" class="form-control" id="gambar" wire:model="gambar">
+                                                @error('gambar')
+                                                <div class="text-danger">{{ $message }}</div>
+                                                @enderror
+
+                                                <!-- Preview gambar -->
+                                                @if ($gambar)
+                                                <img src="{{ $gambar->temporaryUrl() }}" class="img-fluid mt-2" width="150">
+                                                @endif
+                                            </div>
+                                        </div>
+
+
                                         <div class="col-sm-12 text-end">
                                             <button type="submit" class="btn btn-primary">Tambah</button>
                                             <a wire:navigate href="/barang" class="btn btn-outline-primary">Batal</a>

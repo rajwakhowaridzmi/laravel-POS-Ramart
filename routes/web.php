@@ -5,12 +5,16 @@ use App\Livewire\Admin\Barang\Barang;
 use App\Livewire\Admin\Barang\EditBarang;
 use App\Livewire\Admin\Barang\TambahBarang;
 use App\Livewire\Admin\DashboardAdmin;
+use App\Livewire\Admin\Laporan\LaporanBarang;
 use App\Livewire\Admin\Pelanggan\EditPelanggan;
 use App\Livewire\Admin\Pelanggan\Pelanggan;
 use App\Livewire\Admin\Pelanggan\TambahPelanggan;
 use App\Livewire\Admin\Pembelian\DetailPembelian;
 use App\Livewire\Admin\Pembelian\Pembelian;
 use App\Livewire\Admin\Pembelian\TambahPembelian;
+use App\Livewire\Admin\Penjualan\DetailPenjualan;
+use App\Livewire\Admin\Penjualan\Penjualan;
+use App\Livewire\Admin\Penjualan\TambahPenjualan;
 use App\Livewire\Admin\Produk\EditProduk;
 use App\Livewire\Admin\Produk\Produk;
 use App\Livewire\Admin\Produk\TambahProduk;
@@ -51,6 +55,12 @@ Route::middleware(['auth', RoleMiddleware::class.':0'])->group(function () {
     Route::get('/pembelian', Pembelian::class)->name('pembelian');
     Route::get('/tambah-pembelian', TambahPembelian::class)->name('tambah-pembelian');
     Route::get('/detail-pembelian/{pembelian_id}', DetailPembelian::class)->name('detail-pembelian');
+
+    Route::get('/penjualan', Penjualan::class)->name('penjualan');
+    Route::get('/tambah-penjualan', TambahPenjualan::class)->name('tambah-penjualan');
+    Route::get('/detail-penjualan/{penjualan_id}', DetailPenjualan::class)->name('detail-penjualan');
+
+    Route::get('/laporan-barang', LaporanBarang::class)->name('laporan-barang');
 });
 
 Route::middleware(['auth', RoleMiddleware::class.':1'])->group(function () {

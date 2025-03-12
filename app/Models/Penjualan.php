@@ -9,12 +9,10 @@ class Penjualan extends Model
     protected $table = 'penjualan'; 
     protected $primaryKey = 'penjualan_id';
     protected $keyType = 'int';
-
-    public $incrementing = false;
     public $fillable = [
         'penjualan_id',
         'no_faktur',
-        'tanggal_faktur',
+        'tgl_faktur',
         'total_bayar',
         'pelanggan_id',
         'user_id'

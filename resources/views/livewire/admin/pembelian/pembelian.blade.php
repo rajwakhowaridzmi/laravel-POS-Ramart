@@ -29,7 +29,7 @@
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <h5 class="card-title">Daftar Pembelian</h5>
-                                        <button class="btn btn-primary" wire:navigate href="/tambah-pembelian">Tambah Pembelian</button>
+                                        <button class="btn btn-primary" wire:navigate href="/tambah-pembelian">Tambah Penjualan</button>
                                     </div>
                                     <table class="table table-hover">
                                         <thead>
@@ -42,9 +42,9 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($pembelian as $pembelians)
+                                            @foreach ($pembelian as $loopIndex => $pembelians)
                                             <tr>
-                                                <th scope="row">{{ $loop->iteration }}</th>
+                                                <th scope="row">{{ $pembelian->firstItem() +  $loopIndex}}</th>
                                                 <td>{{ $pembelians->kode_masuk ?? '-'}}</td>
                                                 <td>{{ $pembelians->tanggal_masuk ?? '-'}}</td>
                                                 <td>{{ $pembelians->pemasok->nama_pemasok ?? '-'}}</td>
@@ -55,6 +55,7 @@
                                             @endforeach 
                                         </tbody>
                                     </table>
+                                    {{ $pembelian->links() }}
                                 </div>
                             </div>
                         </div>

@@ -99,12 +99,30 @@
       </ul>
     </li><!-- End Icons Nav -->
 
-    <li class="nav-heading">Pages</li>
+    <li class="nav-item">
+      <a class="nav-link collapsed" data-bs-target="#penjualan-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-menu-button-wide"></i><span>Penjualan</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="penjualan-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+        <li>
+          <a wire:navigate href="/penjualan">
+            <i class="bi bi-circle"></i><span>Riwayat Penjualan</span>
+          </a>
+        </li>
+        <li>
+          <a wire:navigate href="/tambah-penjualan">
+            <i class="bi bi-circle"></i><span>Tambah Penjualan</span>
+          </a>
+        </li>
+      </ul>
+    </li><!-- End Components Nav -->
+
+    <li class="nav-heading">Laporan</li>
 
     <li class="nav-item">
-      <a class="nav-link collapsed" href="users-profile.html">
+      <a class="nav-link collapsed" wire:navigate href="/laporan-barang">
         <i class="bi bi-person"></i>
-        <span>Profile</span>
+        <span>Laporan Barang</span>
       </a>
     </li><!-- End Profile Page Nav -->
 

@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Barang extends Model
 {
+    use HasFactory;
     protected $table = 'barang';
     protected $primaryKey = 'barang_id';
     protected $keyType = 'int';
@@ -16,10 +18,12 @@ class Barang extends Model
         'kode_barang',
         'produk_id',
         'nama_barang',
-        'satuan',
+        'harga_beli',
         'harga_jual',
+        'persentase',
         'stok',
         'status_barang',
+        'gambar',
         'user_id'
     ];
     public function produk() {

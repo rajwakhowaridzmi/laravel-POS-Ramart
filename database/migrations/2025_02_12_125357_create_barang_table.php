@@ -21,6 +21,7 @@ return new class extends Migration
             $table->double('harga_jual')->nullable();
             $table->integer('stok')->nullable();
             $table->enum('status_barang', ['0','1']);
+            $table->string('gambar', 255)->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->timestamps();
 

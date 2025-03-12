@@ -23,7 +23,7 @@
                                     <!-- General Form Elements -->
                                     <form wire:submit.prevent="update">
                                         <div class="row mb-3">
-                                            <label for="kode_barang" class="col-sm-2 col-form-label">Kode Produk</label>
+                                            <label for="kode_barang" class="col-sm-2 col-form-label">Kode Barang</label>
                                             <div class="col-sm-10">
                                                 <input type="text" class="form-control" id="kode_barang" wire:model="kode_barang">
                                                 @error('kode_barang')
@@ -60,26 +60,6 @@
                                         </div>
 
                                         <div class="row mb-3">
-                                            <label for="harga_jual" class="col-sm-2 col-form-label">Harga Jual</label>
-                                            <div class="col-sm-10">
-                                                <input type="number" class="form-control" id="harga_jual" wire:model="harga_jual">
-                                                @error('harga_jual')
-                                                <div class="text-danger">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                        </div>
-
-                                        <div class="row mb-3">
-                                            <label for="stok" class="col-sm-2 col-form-label">Stok</label>
-                                            <div class="col-sm-10">
-                                                <input type="number" class="form-control" id="stok" wire:model="stok">
-                                                @error('stok')
-                                                <div class="text-danger">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                        </div>
-
-                                        <div class="row mb-3">
                                             <label for="status_barang" class="col-sm-2 col-form-label">Status Barang</label>
                                             <div class="col-sm-10">
                                                 <select class="form-select" id="status_barang" wire:model="status_barang">
@@ -92,6 +72,32 @@
                                                 @enderror
                                             </div>
                                         </div>
+                                        <div class="row mb-3">
+                                            <label for="persentase" class="col-sm-2 col-form-label">Keuntungan (%)</label>
+                                            <div class="col-sm-10">
+                                                <input type="number" class="form-control" id="persentase" wire:model="persentase">
+                                                @error('persentase')
+                                                <div class="text-danger">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label for="gambar" class="col-sm-2 col-form-label">Gambar</label>
+                                            <div class="col-sm-10">
+                                                <input type="file" class="form-control" id="gambar" wire:model="gambar">
+                                                @error('gambar')
+                                                <div class="text-danger">{{ $message }}</div>
+                                                @enderror
+
+                                                @if ($gambar instanceof \Livewire\TemporaryUploadedFile)
+                                                <img src="{{ $gambar->temporaryUrl() }}" class="img-fluid mt-2" width="150">
+
+                                                @elseif($gambar)
+                                                <img src="{{ asset('storage/' . $gambar) }}" class="img-fluid mt-2" width="150">
+                                                @endif
+                                            </div>
+                                        </div>
+
                                         <div class="col-sm-12 text-end">
                                             <button type="submit" class="btn btn-primary">Tambah</button>
                                             <a wire:navigate href="/barang" class="btn btn-outline-primary">Batal</a>

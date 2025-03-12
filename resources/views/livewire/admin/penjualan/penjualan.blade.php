@@ -4,7 +4,7 @@
             <main id="main" class="main">
                 <div class="d-flex align-items-center justify-content-between">
                     <div class="pagetitle">
-                        <h1>Daftar Pemasok</h1>
+                        <h1>Pembelian</h1>
                         <nav>
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="index.html">Home</a></li>
@@ -28,39 +28,35 @@
                             <div class="card">
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-center">
-                                        <h5 class="card-title">Pemasok</h5>
-                                        <button class="btn btn-primary" wire:navigate href="/tambah-pemasok">Tambah Pemasok</button>
+                                        <h5 class="card-title">Daftar Pembelian</h5>
+                                        <button class="btn btn-primary" wire:navigate href="/tambah-penjualan">Tambah Penjualan</button>
                                     </div>
                                     <table class="table table-hover">
                                         <thead>
                                             <tr>
                                                 <th scope="col">#</th>
-                                                <th scope="col">Nama Pemasok</th>
-                                                <th scope="col">Alamat</th>
-                                                <th scope="col">No Telp</th>
-                                                <th scope="col">Email</th>
+                                                <th scope="col">Nomor Faktur</th>
+                                                <th scope="col">Tanggal</th>
+                                                <th scope="col">Total Bayar</th>
+                                                <th scope="col">Pelanggan</th>
                                                 <th scope="col">Aksi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($pemasok as $loopIndex => $pemasoks)
+                                            @foreach ($penjualan as $penjualans)
                                             <tr>
-                                                <th scope="row">{{ $pemasok->firstItem() + $loopIndex }}</th>
-                                                <td>{{ $pemasoks->nama_pemasok ?? '-'}}</td>
-                                                <td>{{ $pemasoks->alamat ?? '-'}}</td>
-                                                <td>{{ $pemasoks->no_telp ?? '-'}}</td>
-                                                <td>{{ $pemasoks->email ?? '-'}}</td>
+                                                <th scope="row">{{ $loop->iteration }}</th>
+                                                <td>{{ $penjualans->no_faktur ?? '-'}}</td>
+                                                <td>{{ $penjualans->tgl_faktur ?? '-'}}</td>
+                                                <td>{{ $penjualans->total_bayar ?? '-'}}</td>
+                                                <td>{{ $penjualans->pelanggan->nama ?? '-'}}</td>
                                                 <td>
-                                                    <a wire:navigate href="/edit-pemasok/{{ $pemasoks->pemasok_id}}" class="bi bi-pencil-square fs-3"></a>
-                                                    <a wire:click="confirmDelete('{{ $pemasoks->pemasok_id }}')" class="bi bi-trash fs-3 cursor-pointer" data-bs-toggle="modal" data-bs-target="#konfirmasiHapusModal"></a>
+                                                    <a wire:navigate href="/detail-penjualan/{{ $penjualans->penjualan_id}}" class="bi bi-pencil-square fs-3"></a>
                                                 </td>
                                             </tr>
-                                            @endforeach
+                                            @endforeach 
                                         </tbody>
                                     </table>
-                                    <div>
-                                        {{ $pemasok->links() }}
-                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -4,14 +4,17 @@ namespace App\Livewire\Admin\Produk;
 
 use App\Models\Produk as ModelsProduk;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class Produk extends Component
 {
+    use WithPagination;
     public $produk_id;
+    protected $paginationTheme = 'bootstrap';
 
     public function render()
     {
-        $produks = ModelsProduk::all();
+        $produks = ModelsProduk::paginate(5);
         return view('livewire.admin.produk.produk', ['produk' => $produks]);
     }
 

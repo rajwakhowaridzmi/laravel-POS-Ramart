@@ -47,30 +47,41 @@
                                                 <th scope="col">Keuntungan</th>
                                                 <th scope="col">Harga Jual</th>
                                                 <th scope="col">Stok</th>
-                                                <th scope="col">Status Barang</th>
+                                                <th scope="col">Status</th>
+                                                <th scope="col">Gambar</th>
                                                 <th scope="col">Aksi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($barang as $barangs)
+                                            @foreach ($barang as $loopIndex => $barangs)
                                             <tr>
-                                                <th scope="row">{{ $loop->iteration }}</th>
-                                                <td>{{ $barangs->kode_barang ?? '-'}}</td>
-                                                <td>{{ $barangs->nama_barang ?? '-'}}</td>
-                                                <td>{{ $barangs->produk->nama_produk ?? '-'}}</td>
-                                                <td>{{ $barangs->persentase ?? '-'}}%</td>
-                                                <td>{{ $barangs->harga_jual ?? '-'}}</td>
-                                                <td>{{ $barangs->stok ?? '-'}}</td>
-                                                <td>{{  $statusMapping[$barangs->status_barang] ?? '-'}}</td>
-                                                
+                                                <th scope="row">{{ $barang->firstItem() + $loopIndex }}</th>
+                                                <td>{{ $barangs->kode_barang ?? '-' }}</td>
+                                                <td>{{ $barangs->nama_barang ?? '-' }}</td>
+                                                <td>{{ $barangs->produk->nama_produk ?? '-' }}</td>
+                                                <td>{{ $barangs->persentase ?? '-' }}%</td>
+                                                <td>{{ $barangs->harga_jual ?? '-' }}</td>
+                                                <td>{{ $barangs->stok ?? '-' }}</td>
+                                                <td>{{ $statusMapping[$barangs->status_barang] ?? '-' }}</td>
                                                 <td>
-                                                    <a wire:navigate href="/edit-barang/{{ $barangs->barang_id}}" class="bi bi-pencil-square fs-3"></a>
+                                                    @if ($barangs->gambar)
+                                                    <img src="{{ asset('storage/' . $barangs->gambar) }}" alt="Gambar Barang" class="img-thumbnail" width="100">
+                                                    @else
+                                                    Tanpa Gambar
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <a wire:navigate href="/edit-barang/{{ $barangs->barang_id }}" class="bi bi-pencil-square fs-3"></a>
                                                     <a wire:click="confirmDelete('{{ $barangs->barang_id }}')" class="bi bi-trash fs-3 cursor-pointer" data-bs-toggle="modal" data-bs-target="#konfirmasiHapusModal"></a>
                                                 </td>
                                             </tr>
                                             @endforeach
                                         </tbody>
+
                                     </table>
+                                    <div>
+                                        {{ $barang->links() }}
+                                    </div>
                                 </div>
                             </div>
                         </div>

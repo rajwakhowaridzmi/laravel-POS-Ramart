@@ -40,9 +40,9 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($produk as $produks)
+                                            @foreach ($produk as $loopIndex => $produks)
                                             <tr>
-                                                <th scope="row">{{ $loop->iteration }}</th>
+                                                <th scope="row">{{ $produk->firstItem() + $loopIndex }}</th>
                                                 <td>{{ $produks->nama_produk ?? '-'}}</td>
                                                 <td>
                                                     <a wire:navigate href="/edit-produk/{{ $produks->produk_id}}" class="bi bi-pencil-square fs-3"></a>
@@ -52,6 +52,7 @@
                                             @endforeach
                                         </tbody>
                                     </table>
+                                    {{ $produk->links() }}
                                 </div>
                             </div>
                         </div>

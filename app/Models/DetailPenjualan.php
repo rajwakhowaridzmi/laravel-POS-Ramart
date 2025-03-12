@@ -10,7 +10,6 @@ class DetailPenjualan extends Model
     protected $primaryKey = 'detail_penjualan_id';
     protected $keyType = 'int';
 
-    public $incrementing = false;
     protected $fillable = [
         'detail_penjualan_id',
         'penjualan_id',
@@ -25,4 +24,5 @@ class DetailPenjualan extends Model
     public function barang() {
         return $this->belongsTo(Barang::class, 'barang_id', 'barang_id');
     }
+    
 }

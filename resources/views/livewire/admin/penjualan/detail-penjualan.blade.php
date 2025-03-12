@@ -18,31 +18,44 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card" id="invoice">
-                        <div class="card-header d-flex justify-content-between align-items-center">
-                            <div class="d-flex align-items-center">
-                                <h3 class="fw-bold mb-0"><i class="bi bi-shop fs-1 me-2"></i>Ramart</h3>
+                        <div class="card-header text-center">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center">
+                                    <h3 class="fw-bold mb-0"><i class="bi bi-shop fs-1 me-2"></i>Ramart</h3>
+                                </div>
+                                <h3 class="fw-bold mt-3">No. {{ $penjualan->no_faktur ?? 'N/A' }}</h3>
                             </div>
-                            <h3 class="fw-bold mt-3">No. {{ $pembelian->kode_masuk ?? 'N/A' }}</h3>
                         </div>
-
 
                         <div class="card-body">
                             <div class="row my-4">
                                 <div class="col-sm-6">
-                                    <h5>Informasi Pemasok</h5>
+                                    <h5>Informasi Penjual</h5>
                                     <p>
-                                        <strong>Nama:</strong> {{ $pembelian->pemasok->nama_pemasok ?? 'Data tidak tersedia' }}<br>
-                                        <strong>Alamat:</strong> {{ $pembelian->pemasok->alamat ?? 'Data tidak tersedia' }}<br>
-                                        <strong>Telepon:</strong> {{ $pembelian->pemasok->no_telp ?? 'Data tidak tersedia' }}<br>
-                                        <strong>Email:</strong> {{ $pembelian->pemasok->email ?? 'Data tidak tersedia' }}
+                                        <strong>Nama: </strong> {{ $penjualan->user->nama ?? 'Data tidak tersedia' }}<br>
+                                        <strong>Alamat: </strong> Jl. Contoh No. 123, Jakarta<br>
+                                        <strong>Telepon: </strong> (021) 1234567<br>
+                                        <strong>Email: </strong> ramart@toko.com
                                     </p>
                                 </div>
                                 <div class="col-sm-6 text-end">
-                                    <h5>Informasi Pembelian</h5>
+                                    <h5>Informasi Pembeli</h5>
                                     <p>
-                                        <strong>Kode Masuk:</strong> {{ $pembelian->kode_masuk ?? 'Data tidak tersedia' }}<br>
-                                        <strong>Tanggal Masuk:</strong> {{ $pembelian->tanggal_masuk ?? 'Data tidak tersedia' }}<br>
+                                        <strong>Nama: </strong> {{ $penjualan->pelanggan->nama ?? '-' }}<br>
+                                        <strong>Alamat: </strong> {{ $penjualan->pelanggan->alamat ?? '-' }}<br>
+                                        <strong>No. Telepon: </strong> {{ $penjualan->pelanggan->no_telp ?? '-' }}<br>
                                     </p>
+                                </div>
+                            </div>
+
+                            <div class="row mb-4">
+                                <div class="col-sm-6">
+                                    <h5>Tanggal Faktur</h5>
+                                    <p>{{ $penjualan->tgl_faktur ?? 'Data tidak tersedia' }}</p>
+                                </div>
+                                <div class="col-sm-6 text-end">
+                                    <h5>Total Bayar</h5>
+                                    <p>Rp. {{ number_format($penjualan->total_bayar ?? 0, 0, ',', '.') }}</p>
                                 </div>
                             </div>
 
@@ -51,26 +64,20 @@
                                     <tr>
                                         <th>#</th>
                                         <th>Nama Barang</th>
-                                        <th>Harga Beli</th>
+                                        <th>Harga Jual</th>
                                         <th>Jumlah</th>
                                         <th>Subtotal</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @php
-                                    $total = 0;
-                                    @endphp
-                                    @forelse ($pembelian->detailPembelian as $index => $detail)
+                                    @forelse ($penjualan->detailPenjualan as $index => $detail)
                                     <tr>
                                         <td>{{ $index + 1 }}</td>
                                         <td>{{ $detail->barang->nama_barang ?? 'Data tidak tersedia' }}</td>
-                                        <td>Rp. {{ number_format($detail->harga_beli, 0, ',', '.') }}</td>
+                                        <td>Rp. {{ number_format($detail->harga_jual, 0, ',', '.') }}</td>
                                         <td>{{ $detail->jumlah }}</td>
                                         <td>Rp. {{ number_format($detail->sub_total, 0, ',', '.') }}</td>
                                     </tr>
-                                    @php
-                                    $total += $detail->sub_total;
-                                    @endphp
                                     @empty
                                     <tr>
                                         <td colspan="5" class="text-center">Tidak ada data barang.</td>
@@ -78,14 +85,11 @@
                                     @endforelse
                                 </tbody>
                             </table>
-
-                            <div class="text-end mt-5">
-                                <h5>Total Pembelian: Rp. {{ number_format($total, 0, ',', '.') }}</h5>
-                            </div>
                         </div>
                     </div>
+
                     <div class="d-flex justify-content-between mb-3">
-                        <a href="{{ url('/pembelian') }}" class="btn btn-primary">Kembali</a>
+                        <a href="{{ url('/penjualan') }}" class="btn btn-primary">Kembali</a>
                         <button onclick="printInvoice()" class="btn btn-success">Print</button>
                     </div>
                 </div>
@@ -93,7 +97,6 @@
         </section>
     </main>
 </div>
-
 <script>
     function printInvoice() {
         var printContent = document.getElementById("invoice").innerHTML;
@@ -102,6 +105,6 @@
         document.body.innerHTML = printContent;
         window.print();
         document.body.innerHTML = originalContent;
-        location.reload(); // Reload halaman agar kembali ke tampilan semula
+        location.reload();
     }
 </script>
