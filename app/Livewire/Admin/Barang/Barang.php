@@ -11,7 +11,7 @@ class Barang extends Component
 {
     use WithPagination;
     public $barang_id, $produk_id;
-    public $paginationTheme = 'bootstrap';
+    protected $paginationTheme = 'bootstrap';
     public function render()
     {
         $barangs = ModelsBarang::paginate(5);

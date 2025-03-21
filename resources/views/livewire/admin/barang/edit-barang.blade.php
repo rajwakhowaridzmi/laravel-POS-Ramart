@@ -88,15 +88,14 @@
                                                 @error('gambar')
                                                 <div class="text-danger">{{ $message }}</div>
                                                 @enderror
-
-                                                @if ($gambar instanceof \Livewire\TemporaryUploadedFile)
+                                                @if ($gambar instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile)
                                                 <img src="{{ $gambar->temporaryUrl() }}" class="img-fluid mt-2" width="150">
-
-                                                @elseif($gambar)
-                                                <img src="{{ asset('storage/' . $gambar) }}" class="img-fluid mt-2" width="150">
+                                                @elseif ($gambar_lama)
+                                                <img src="{{ asset('storage/' . $gambar_lama) }}" class="img-fluid mt-2" width="150">
                                                 @endif
                                             </div>
                                         </div>
+
 
                                         <div class="col-sm-12 text-end">
                                             <button type="submit" class="btn btn-primary">Tambah</button>

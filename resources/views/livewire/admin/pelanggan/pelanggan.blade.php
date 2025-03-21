@@ -36,6 +36,7 @@
                                     <div class="d-flex justify-content-between align-items-center">
                                         <h5 class="card-title">Daftar Pelanggan</h5>
                                         <button class="btn btn-primary" wire:navigate href="/tambah-pelanggan">Tambah Pelanggan</button>
+                                        
                                     </div>
                                     <table class="table table-hover">
                                         <thead>
@@ -47,7 +48,7 @@
                                                 <th scope="col">Nomor Telpon</th>
                                                 <th scope="col">Email</th>
                                                 <th scope="col">Status Member</th>
-                                                <th scope="col">Total Poin</th>
+                                                <!-- <th scope="col">Total Poin</th> -->
                                                 <th scope="col">Aksi</th>
                                             </tr>
                                         </thead>
@@ -61,7 +62,7 @@
                                                 <td>{{ $pelanggan->no_telp ?? '-'}}</td>
                                                 <td>{{ $pelanggan->email ?? '-'}}</td>
                                                 <td>{{ $statusMapping[$pelanggan->member_status] ?? '-'}}</td>
-                                                <td>{{ $pelanggan->total_poin ?? '-'}}</td>
+                                                <!-- <td>{{ $pelanggan->total_poin ?? '-'}}</td> -->
                                                 <td class="d-flex align-items-center gap-2">
                                                     <a wire:navigate href="/edit-pelanggan/{{ $pelanggan->pelanggan_id}}" class="bi bi-pencil-square fs-3"></a>
                                                     <a wire:click="confirmDelete('{{ $pelanggan->pelanggan_id }}')" class="bi bi-trash fs-3 cursor-pointer" data-bs-toggle="modal" data-bs-target="#konfirmasiHapusModal"></a>

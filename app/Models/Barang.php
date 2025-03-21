@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Barang extends Model
 {
     use HasFactory;
+    protected $appends = [];
+    protected $hidden = [];
+
     protected $table = 'barang';
     protected $primaryKey = 'barang_id';
     protected $keyType = 'int';

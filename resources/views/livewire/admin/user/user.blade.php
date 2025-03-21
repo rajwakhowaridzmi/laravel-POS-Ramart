@@ -4,7 +4,7 @@
             <main id="main" class="main">
                 <div class="d-flex align-items-center justify-content-between">
                     <div class="pagetitle">
-                        <h1>Pembelian</h1>
+                        <h1>Daftar User</h1>
                         <nav>
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="index.html">Home</a></li>
@@ -28,36 +28,34 @@
                             <div class="card">
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-center">
-                                        <h5 class="card-title">Daftar Pembelian</h5>
-                                        <button class="btn btn-primary" wire:navigate href="/tambah-penjualan">Tambah Penjualan</button>
+                                        <h5 class="card-title">Produk</h5>
+                                        <button class="btn btn-primary" wire:navigate href="/tambah-produk">Tambah Produk</button>
                                     </div>
                                     <table class="table table-hover">
                                         <thead>
                                             <tr>
                                                 <th scope="col">#</th>
-                                                <th scope="col">Nomor Faktur</th>
-                                                <th scope="col">Tanggal</th>
-                                                <th scope="col">Total Bayar</th>
-                                                <th scope="col">Pelanggan</th>
-                                                <th scope="col">Aksi</th>
+                                                <th scope="col">Nama</th>
+                                                <th scope="col">Email</th>
+                                                <th scope="col">Role</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($penjualan as $loopIndex => $penjualans)
+                                            @foreach ($user as $loopIndex => $users)
                                             <tr>
-                                                <th scope="row">{{ $penjualan->firstItem() +$loopIndex }}</th>
-                                                <td>{{ $penjualans->no_faktur ?? '-'}}</td>
-                                                <td>{{ $penjualans->tgl_faktur ?? '-'}}</td>
-                                                <td>{{ $penjualans->total_bayar ?? '-'}}</td>
-                                                <td>{{ $penjualans->pelanggan->nama ?? '-'}}</td>
+                                                <th scope="row">{{ $user->firstItem() + $loopIndex }}</th>
+                                                <td>{{ $users->nama ?? '-'}}</td>
+                                                <td>{{ $users->email ?? '-'}}</td>
+                                                <td>{{ $users->role == 0 ? 'Admin' : 'Kasir'}}</td>
                                                 <td>
-                                                    <a wire:navigate href="/detail-penjualan/{{ $penjualans->penjualan_id}}" class="bi bi-pencil-square fs-3"></a>
+                                                    <a wire:navigate href="/edit-produk/{{ $users->produk_id}}" class="bi bi-pencil-square fs-3"></a>
+                                                    <a wire:click="confirmDelete('{{ $users->produk_id }}')" class="bi bi-trash fs-3 cursor-pointer" data-bs-toggle="modal" data-bs-target="#konfirmasiHapusModal"></a>
                                                 </td>
                                             </tr>
-                                            @endforeach 
+                                            @endforeach
                                         </tbody>
                                     </table>
-                                    {{ $penjualan->links() }}
+                                    {{ $user->links() }}
                                 </div>
                             </div>
                         </div>

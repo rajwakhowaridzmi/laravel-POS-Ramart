@@ -5,6 +5,8 @@ namespace Database\Seeders;
 use App\Models\Produk;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Schema;
 
 class ProdukSeeder extends Seeder
 {
@@ -13,6 +15,15 @@ class ProdukSeeder extends Seeder
      */
     public function run(): void
     {
-        Produk::factory()->count(10)->create();
+        Schema::disableForeignKeyConstraints();
+        Produk::truncate();
+        Schema::enableForeignKeyConstraints();
+        $file = File::get('');
+        $data = json_decode($file);
+        foreach($data as $item){
+            Produk::create([
+                'produk_id' => $item->produk_id
+            ]);
+        }
     }
 }

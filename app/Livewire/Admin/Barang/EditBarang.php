@@ -13,7 +13,7 @@ use Livewire\WithFileUploads;
 class EditBarang extends Component
 {
     use WithFileUploads;
-    public $barang_id, $kode_barang, $nama_barang, $produk_id, $stok, $status_barang, $user_id, $persentase, $harga_beli, $gambar;
+    public $barang_id, $kode_barang, $nama_barang, $produk_id, $stok, $status_barang, $user_id, $persentase, $harga_beli, $gambar, $gambar_lama;
     public function mount($barang_id)
     {
         $barang = Barang::find($barang_id);
@@ -27,7 +27,7 @@ class EditBarang extends Component
         $this->status_barang = $barang->status_barang;
         $this->persentase = $barang->persentase;
         $this->harga_beli = $barang->harga_beli;
-        $this->gambar = $barang->gambar;
+        $this->gambar_lama = $barang->gambar;
     }
     public function update()
     {
@@ -46,8 +46,6 @@ class EditBarang extends Component
             'produk_id.required' => 'Produk tidak boleh kosong',
             'status_barang.required' => 'Status barang tidak boleh kosong',
             'persentase.required' => 'Persentase tidak boleh kosong',
-            'gambar.image' => 'File harus berupa gambar',
-            'gambar.max' => 'Ukuran gambar maksimal 2MB',
         ]);
 
 
@@ -63,7 +61,7 @@ class EditBarang extends Component
         if ($this->gambar instanceof TemporaryUploadedFile) {
             $gambarPath = $this->gambar->store('barang', 'public');
         } else {
-            $gambarPath = $barang->gambar; 
+            $gambarPath = $this->gambar_lama;
         }
         
         $harga_jual_baru = $this->harga_beli * (1 + $this->persentase / 100);

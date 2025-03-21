@@ -6,18 +6,23 @@ use App\Livewire\Admin\Barang\EditBarang;
 use App\Livewire\Admin\Barang\TambahBarang;
 use App\Livewire\Admin\DashboardAdmin;
 use App\Livewire\Admin\Laporan\LaporanBarang;
+use App\Livewire\Admin\Laporan\LaporanPembelian;
+use App\Livewire\Admin\Laporan\LaporanPenjualan;
 use App\Livewire\Admin\Pelanggan\EditPelanggan;
 use App\Livewire\Admin\Pelanggan\Pelanggan;
 use App\Livewire\Admin\Pelanggan\TambahPelanggan;
 use App\Livewire\Admin\Pembelian\DetailPembelian;
 use App\Livewire\Admin\Pembelian\Pembelian;
 use App\Livewire\Admin\Pembelian\TambahPembelian;
+use App\Livewire\Admin\Pengajuan\Pengajuan;
+use App\Livewire\Admin\Pengajuan\TambahPengajuan;
 use App\Livewire\Admin\Penjualan\DetailPenjualan;
 use App\Livewire\Admin\Penjualan\Penjualan;
 use App\Livewire\Admin\Penjualan\TambahPenjualan;
 use App\Livewire\Admin\Produk\EditProduk;
 use App\Livewire\Admin\Produk\Produk;
 use App\Livewire\Admin\Produk\TambahProduk;
+use App\Livewire\Admin\User\User;
 use App\Livewire\Admin\Vendor\EditPemasok;
 use App\Livewire\Admin\Vendor\Pemasok as VendorPemasok;
 use App\Livewire\Admin\Vendor\TambahPemasok;
@@ -35,6 +40,8 @@ Route::get('/', function () {
 Route::get('/login', Login::class)->name('login');
 
 Route::middleware(['auth', RoleMiddleware::class.':0'])->group(function () {
+    Route::get('/user', User::class)->name('user');
+
     Route::get('/dashboard-admin', DashboardAdmin::class)->name('dashboard-admin');
     Route::get('/pemasok', VendorPemasok::class)->name('pemasok');
     Route::get('/tambah-pemasok', TambahPemasok::class)->name('tambah-pemasok');
@@ -61,6 +68,10 @@ Route::middleware(['auth', RoleMiddleware::class.':0'])->group(function () {
     Route::get('/detail-penjualan/{penjualan_id}', DetailPenjualan::class)->name('detail-penjualan');
 
     Route::get('/laporan-barang', LaporanBarang::class)->name('laporan-barang');
+    Route::get('/laporan-penjualan', LaporanPenjualan::class)->name('laporan-penjualan');
+    Route::get('/laporan-pembelian', LaporanPembelian::class)->name('laporan_pembelian');
+
+    Route::get('/pengajuan', Pengajuan::class)->name('pengajuan');
 });
 
 Route::middleware(['auth', RoleMiddleware::class.':1'])->group(function () {

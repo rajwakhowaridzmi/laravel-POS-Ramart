@@ -10,7 +10,7 @@
             <main id="main" class="main">
                 <div class="d-flex align-items-center justify-content-between">
                     <div class="pagetitle">
-                        <h1>Laporan Barang</h1>
+                        <h1>Laporan Penjualan</h1>
                         <nav>
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="index.html">Home</a></li>
@@ -46,25 +46,19 @@
 
                                     <div class="row g-2 my-2 mb-4">
                                         <div class="col-md-3">
-                                            <input type="text" id="searchBarang" wire:model.debounce.500ms="searchBarang" class="form-control" placeholder="Nama/Kode Barang">
+                                            <input type="text" wire:model.debounce.500ms="searchQuery" class="form-control" placeholder="Cari No Faktur / Nama Pelanggan">
                                         </div>
 
                                         <div class="col-md-3">
-                                            <select id="filterProduk" wire:model="filterProduk" class="form-select">
-                                                <option value="">Semua Jenis Produk</option>
-                                                @foreach ($produks as $produk)
-                                                <option value="{{ $produk->produk_id }}">{{ $produk->nama_produk }}</option>
-                                                @endforeach
-                                            </select>
+                                            <!-- <label for="startDate">Tanggal Awal</label> -->
+                                            <input type="date" wire:model="startDate" id="startDate" class="form-control">
                                         </div>
 
                                         <div class="col-md-3">
-                                            <select id="filterStatus" wire:model="filterStatus" class="form-select">
-                                                <option value="">Semua Status</option>
-                                                <option value="1">Dijual</option>
-                                                <option value="0">Ditarik</option>
-                                            </select>
+                                            <!-- <label for="endDate">Tanggal Akhir</label> -->
+                                            <input type="date" wire:model="endDate" id="endDate" class="form-control">
                                         </div>
+
 
                                         <div class="col-md-3">
                                             <button wire:click="filterData" class="btn btn-primary w-100">Filter</button>
@@ -75,35 +69,25 @@
                                         <thead>
                                             <tr>
                                                 <th scope="col">#</th>
-                                                <th scope="col">Kode Barang</th>
-                                                <th scope="col">Nama Barang</th>
-                                                <th scope="col">Jenis Produk</th>
-                                                <th scope="col">Keuntungan</th>
-                                                <th scope="col">Harga Jual</th>
-                                                <th scope="col">Stok</th>
-                                                <th scope="col">Total Terjual</th>
-                                                <th scope="col">Keuntungan</th>
-                                                <th scope="col">Status Barang</th>
+                                                <th scope="col">Nomor Faktur</th>
+                                                <th scope="col">Tanggal</th>
+                                                <th scope="col">Pelanggan</th>
+                                                <th scope="col">Total Bayar</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($barangs as $loopIndex => $barang)
+                                            @foreach ($penjualan as $loopIndex => $penjualans)
                                             <tr>
-                                                <th>{{ $barangs ->firstItem() + $loopIndex }}</th>
-                                                <td>{{ $barang->kode_barang ?? '-'}}</td>
-                                                <td>{{ $barang->nama_barang ?? '-'}}</td>
-                                                <td>{{ $barang->produk->nama_produk ?? '-'}}</td>
-                                                <td>{{ $barang->persentase ?? '-'}}%</td>
-                                                <td>{{ $barang->harga_jual ?? '-'}}</td>
-                                                <td>{{ $barang->stok ?? '-'}}</td>
-                                                <td>{{ $barang->total_terjual ?? 0 }}</td>
-                                                <td>Rp {{ number_format($barang->keuntungan, 0, ',', '.') }}</td>
-                                                <td>{{ $statusMapping[$barang->status_barang] ?? '-' }}</td>
+                                                <th>{{ $penjualan ->firstItem() + $loopIndex }}</th>
+                                                <td>{{ $penjualans->no_faktur ?? '-'}}</td>
+                                                <td>{{ $penjualans->tgl_faktur ?? '-'}}</td>
+                                                <td>{{ $penjualans->pelanggan->nama ?? '-'}}</td>
+                                                <td>Rp. {{ number_format($penjualans->total_bayar, 0, ',', '.') ?? '-' }}</td>
                                             </tr>
                                             @endforeach
                                         </tbody>
                                     </table>
-                                    {{ $barangs->links() }}
+                                    {{ $penjualan->links() }}
                                 </div>
                             </div>
                         </div>

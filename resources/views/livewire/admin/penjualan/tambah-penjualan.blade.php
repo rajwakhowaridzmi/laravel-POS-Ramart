@@ -162,12 +162,13 @@
                                         </div>
 
                                         <div class="col-sm-12 text-end">
-                                            <button type="submit" class="btn btn-primary">Tambah</button>
+                                            <button type="submit" class="btn btn-primary" wire:click.prevent="store">Tambah</button>
                                             <a wire:navigate href="/pembelian" class="btn btn-outline-primary">Batal</a>
                                         </div>
 
                                     </form><!-- End General Form Elements -->
 
+                                    @livewire('admin.penjualan.struk-penjualan')
                                     @if (session()->has('message'))
                                     <div class="alert alert-success mt-3">
                                         {{ session('message') }}

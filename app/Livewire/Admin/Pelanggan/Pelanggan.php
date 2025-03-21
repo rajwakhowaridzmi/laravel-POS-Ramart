@@ -2,7 +2,10 @@
 
 namespace App\Livewire\Admin\Pelanggan;
 
+use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use App\Models\Pelanggan as ModelsPelanggan;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -56,4 +59,30 @@ public function toggleMemberStatus()
     public function confirmDelete($pelanggan_id){
         $this->pelanggan_id = $pelanggan_id;
     }
+    public function exportPdf()
+    {
+        $pelanggans = ModelsPelanggan::all();
+
+        // Setup DomPDF
+        $dompdf = new Dompdf();
+        $options = new Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $dompdf->setOptions($options);
+
+        // Generate HTML content
+        $html = view('livewire.admin.laporan.pdf.pelanggan-pdf', compact('pelanggans'))->render();
+
+        // Load HTML content into DomPDF
+        $dompdf->loadHtml($html);
+
+        // Set paper size
+        $dompdf->setPaper('A4', 'portrait');
+
+        // Render PDF (first pass)
+        $dompdf->render();
+
+        // Stream the file to the browser
+        return $dompdf->stream('daftar_pelanggan.pdf');
+    }
+
 }

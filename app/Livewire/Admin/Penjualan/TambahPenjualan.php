@@ -19,9 +19,12 @@ class TambahPenjualan extends Component
     public $searchPelanggan = '', $filteredPelanggan = [];
 
     public $jumlah_bayar, $kembalian;
+
+    public $showStruk = false;
+    public $penjualanData = [];
     public function mount()
     {
-        $this->pelanggan = Pelanggan::all();
+        $this->pelanggan = Pelanggan::where('member_status', 1)->get();
         $this->barang = Barang::all();
     }
     public function updatedSearchBarang()
@@ -112,24 +115,25 @@ class TambahPenjualan extends Component
         $this->filteredPelanggan = [];
     }
     public function updatedJumlahBayar()
-{
-    if ($this->jumlah_bayar >= $this->total) {
-        $this->kembalian = $this->jumlah_bayar - $this->total;
-    } else {
-        $this->kembalian = 0;
+    {
+        if ($this->jumlah_bayar >= $this->total) {
+            $this->kembalian = $this->jumlah_bayar - $this->total;
+        } else {
+            $this->kembalian = 0;
+        }
     }
-}
-    public function store(){
+    public function store()
+    {
         $this->validate([
             'selectedBarang' => 'required|array|min:1',
             'selectedBarang.*.jumlah' => 'required|numeric|min:1',
-            'jumlah_bayar'=> 'required|numeric|min:'.$this->total,
+            'jumlah_bayar' => 'required|numeric|min:' . $this->total,
         ]);
-        try{
+        try {
             $tanggal = now()->format('Ymd');
             $lastTransaction = Penjualan::whereDate('created_at', today())->latest()->first();
             $lastId = $lastTransaction ? (int) substr($lastTransaction->no_faktur, -4) : 0;
-    
+
             $noFaktur = 'INV-' . $tanggal . '-' . str_pad($lastId + 1, 4, '0', STR_PAD_LEFT);
 
             $penjualan = Penjualan::create([
@@ -145,7 +149,7 @@ class TambahPenjualan extends Component
                 if ($barangModel) {
                     $barangModel->stok -= $barang['jumlah'];
                     $barangModel->save();
-    
+
                     DetailPenjualan::create([
                         'penjualan_id' => $penjualan->penjualan_id,
                         'barang_id' => $barang['barang_id'],
@@ -158,13 +162,92 @@ class TambahPenjualan extends Component
 
             DB::commit();
 
+            // $this->dispatch('cetakStruk', [
+            //     'penjualan_id' => $penjualan->penjualan_id,
+            //     'pelanggan_id' => $penjualan->pelanggan_id,
+            //     'total' => $this->total,
+            //     'jumlah_bayar' => $this->jumlah_bayar,
+            //     'kembalian' => $this->jumlah_bayar - $this->total,
+            //     'barang' => $this->selectedBarang
+            // ]);
+
             session()->flash('success', 'Transaksi Penjualan Berhasil');
             return redirect()->route('penjualan');
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             DB::rollBack();
             session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
+
+    // public function store()
+    // {
+    //     $this->validate([
+    //         'selectedBarang' => 'required|array|min:1',
+    //         'selectedBarang.*.jumlah' => 'required|numeric|min:1',
+    //         'jumlah_bayar' => 'required|numeric|min:' . $this->total,
+    //     ]);
+
+    //     DB::beginTransaction();
+
+    //     try {
+    //         $tanggal = now()->format('Ymd');
+    //         $lastTransaction = Penjualan::whereDate('created_at', today())->latest()->first();
+    //         $lastId = $lastTransaction ? (int) substr($lastTransaction->no_faktur, -4) : 0;
+
+    //         $noFaktur = 'INV-' . $tanggal . '-' . str_pad($lastId + 1, 4, '0', STR_PAD_LEFT);
+
+    //         $penjualan = Penjualan::create([
+    //             'no_faktur' => $noFaktur,
+    //             'tgl_faktur' => now()->format('Ymd'),
+    //             'total_bayar' => $this->total,
+    //             'pelanggan_id' => $this->pelanggan_id,
+    //             'user_id' => Auth::id(),
+    //         ]);
+
+    //         foreach ($this->selectedBarang as $barang) {
+    //             $barangModel = Barang::find($barang['barang_id']);
+    //             if ($barangModel) {
+    //                 $barangModel->stok -= $barang['jumlah'];
+    //                 $barangModel->save();
+
+    //                 DetailPenjualan::create([
+    //                     'penjualan_id' => $penjualan->penjualan_id,
+    //                     'barang_id' => $barang['barang_id'],
+    //                     'harga_jual' => $barang['harga_jual'],
+    //                     'jumlah' => $barang['jumlah'],
+    //                     'sub_total' => $barang['sub_total'],
+    //                 ]);
+    //             }
+    //         }
+
+    //         DB::commit();
+
+    //         // Simpan data struk & tampilkan modal
+    //         $this->penjualanData = [
+    //             'penjualan_id' => $penjualan->penjualan_id,
+    //             'pelanggan_id' => $penjualan->pelanggan_id,
+    //             'total' => $this->total,
+    //             'jumlah_bayar' => $this->jumlah_bayar,
+    //             'kembalian' => $this->jumlah_bayar - $this->total,
+    //             'barang' => $this->selectedBarang,
+    //         ];
+
+    //         $this->showStruk = true; // Tampilkan modal struk
+
+    //         session()->flash('success', 'Transaksi Penjualan Berhasil, Cetak Struk Dulu!');
+    //     } catch (\Exception $e) {
+    //         DB::rollBack();
+    //         session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+    //     }
+    // }
+
+    // public function cetakStruk()
+    // {
+    //     // Cetak struk dan redirect ke halaman penjualan
+    //     $this->showStruk = false;
+    //     return redirect()->route('penjualan');
+    // }
+
     public function render()
     {
         return view('livewire.admin.penjualan.tambah-penjualan');

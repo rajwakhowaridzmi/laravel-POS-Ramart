@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
   <title>Ramart</title>
@@ -29,6 +29,9 @@
   <!-- Template Main CSS File -->
   <link href="/assets/css/style.css" rel="stylesheet">
 
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
+
   <!-- =======================================================
   * Template Name: NiceAdmin
   * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
@@ -36,6 +39,7 @@
   * Author: BootstrapMade.com
   * License: https://bootstrapmade.com/license/
   ======================================================== -->
+  @livewireStyles
 </head>
 @livewireScripts
 
@@ -210,60 +214,26 @@
         </li><!-- End Messages Nav -->
 
         <li class="nav-item dropdown pe-3">
-
           <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
             <img src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">
-            <span class="d-none d-md-block dropdown-toggle ps-2">K. Anderson</span>
-          </a><!-- End Profile Iamge Icon -->
+            <span class="d-none d-md-block dropdown-toggle ps-2">{{ Auth::user()->nama }}</span>
+          </a><!-- End Profile Image Icon -->
 
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
             <li class="dropdown-header">
-              <h6>Kevin Anderson</h6>
-              <span>Web Designer</span>
+              <h6>{{ Auth::user()->nama }}</h6>
+              <span>{{ Auth::user()->role == 0 ? 'Admin' : 'Kasir' }}</span>
             </li>
             <li>
               <hr class="dropdown-divider">
             </li>
 
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
-                <i class="bi bi-person"></i>
-                <span>My Profile</span>
-              </a>
+              @livewire('logout')
             </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li>
-              <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
-                <i class="bi bi-gear"></i>
-                <span>Account Settings</span>
-              </a>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li>
-              <a class="dropdown-item d-flex align-items-center" href="pages-faq.html">
-                <i class="bi bi-question-circle"></i>
-                <span>Need Help?</span>
-              </a>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li>
-              <a class="dropdown-item d-flex align-items-center" href="#">
-                <i class="bi bi-box-arrow-right"></i>
-                <span>Sign Out</span>
-              </a>
-            </li>
-
           </ul><!-- End Profile Dropdown Items -->
-        </li><!-- End Profile Nav -->
+        </li>
+        <!-- End Profile Nav -->
 
       </ul>
     </nav><!-- End Icons Navigation -->
@@ -310,7 +280,61 @@
 
   <!-- Template Main JS File -->
   <script src="/assets/js/main.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
 
+  <!-- PDFMake (required for PDF export) -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+
+  <!-- JSZip (required for Excel export) -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+
+  <!-- Buttons HTML5 (for export functionality) -->
+  <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
+
+  <!-- Buttons Print (for print functionality) -->
+  <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('.datatable').DataTable({
+        dom: 'Bfrtip', // Add buttons to the DOM
+        buttons: [{
+            extend: 'copy',
+            className: 'btn btn-primary' // Apply Bootstrap button classes
+          },
+          {
+            extend: 'csv',
+            className: 'btn btn-primary'
+          },
+          {
+            extend: 'excel',
+            className: 'btn btn-primary'
+          },
+          {
+            extend: 'pdf',
+            className: 'btn btn-primary'
+          },
+          {
+            extend: 'print',
+            className: 'btn btn-primary'
+          }
+        ],
+        responsive: true, // Enable responsive features
+        paging: true, // Enable pagination
+        lengthMenu: [10, 25, 50, 100], // Set page length options
+        pageLength: 10, // Default page length
+        language: {
+          search: "Cari:", // Customize search label
+          paginate: {
+            next: "Selanjutnya",
+            previous: "Sebelumnya"
+          }
+        }
+      });
+    });
+  </script>
 </body>
 
 </html>
