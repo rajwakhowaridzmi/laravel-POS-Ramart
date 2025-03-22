@@ -4,7 +4,7 @@
             <main id="main" class="main">
                 <div class="d-flex align-items-center justify-content-between">
                     <div class="pagetitle">
-                        <h1>Pembelian</h1>
+                        <h1>Penjualan</h1>
                         <nav>
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="index.html">Home</a></li>
@@ -28,7 +28,7 @@
                             <div class="card">
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-center">
-                                        <h5 class="card-title">Daftar Pembelian</h5>
+                                        <h5 class="card-title">Daftar Penjualan</h5>
                                         <button class="btn btn-primary" wire:navigate href="/tambah-penjualan">Tambah Penjualan</button>
                                     </div>
                                     <table class="table table-hover">

@@ -11,14 +11,14 @@ class Login extends Component
 {
     #[Layout('components.layouts.login')]
 
-    public $nama, $password;
+    public $email, $password;
     public function render()
     {
         return view('livewire.login');
     }
     public function login()
     {
-        $user = User::where('nama', $this->nama)
+        $user = User::where('email', $this->email)
             ->where('password', md5($this->password))
             ->first();
 

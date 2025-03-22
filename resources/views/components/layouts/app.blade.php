@@ -296,45 +296,7 @@
 
   <!-- Buttons Print (for print functionality) -->
   <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
-  <script>
-    $(document).ready(function() {
-      $('.datatable').DataTable({
-        dom: 'Bfrtip', // Add buttons to the DOM
-        buttons: [{
-            extend: 'copy',
-            className: 'btn btn-primary' // Apply Bootstrap button classes
-          },
-          {
-            extend: 'csv',
-            className: 'btn btn-primary'
-          },
-          {
-            extend: 'excel',
-            className: 'btn btn-primary'
-          },
-          {
-            extend: 'pdf',
-            className: 'btn btn-primary'
-          },
-          {
-            extend: 'print',
-            className: 'btn btn-primary'
-          }
-        ],
-        responsive: true, // Enable responsive features
-        paging: true, // Enable pagination
-        lengthMenu: [10, 25, 50, 100], // Set page length options
-        pageLength: 10, // Default page length
-        language: {
-          search: "Cari:", // Customize search label
-          paginate: {
-            next: "Selanjutnya",
-            previous: "Sebelumnya"
-          }
-        }
-      });
-    });
-  </script>
+  
 </body>
 
 </html>

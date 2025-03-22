@@ -75,6 +75,16 @@ Route::middleware(['auth', RoleMiddleware::class.':0'])->group(function () {
 });
 
 Route::middleware(['auth', RoleMiddleware::class.':1'])->group(function () {
-    Route::get('/dashboard-kasir', DashboardKasir::class)->name('dashboard-kasir');
+    Route::get('/kasir/dashboard', DashboardKasir::class)->name('dashboard-kasir');
+
+    Route::get('/kasir/penjualan', Penjualan::class)->name('penjualan-kasir');
+    Route::get('/kasir/tambah-penjualan', TambahPenjualan::class)->name('tambah-penjualan-kasir');
+    Route::get('/kasir/detail-penjualan/{penjualan_id}', DetailPenjualan::class)->name('detail-penjualan-kasir');
+
+    Route::get('/kasir/pelanggan', Pelanggan::class)->name('pelanggan-kasir');
+    Route::get('/kasir/tambah-pelanggan', TambahPelanggan::class)->name('tambah-pelanggan-kasir');
+    Route::get('/kasir/edit-pelanggan/{pelanggan_id}', EditPelanggan::class)->name('edit-pelanggan-kasir');
+
+    Route::get('/kasir/pengajuan', Pengajuan::class)->name('pengajuan-kasir');
 });
 

@@ -7,6 +7,7 @@ use App\Models\Pelanggan;
 use App\Models\Pengajuan as ModelsPengajuan;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Maatwebsite\Excel\Facades\Excel;
@@ -20,12 +21,14 @@ class Pengajuan extends Component
     public $filteredPelanggan = [];
     protected $paginationTheme = 'bootstrap';
 
+    //function untuk memunculkan modal
     public function showModal()
     {
         $this->resetInputFields();
-        $this->dispatch('show-pengajuan-modal'); // Perubahan di sini
+        $this->dispatch('show-pengajuan-modal');
     }
 
+    //function untuk mencari pelanggan
     public function updatedSearchPelanggan()
     {
         if (!empty($this->searchPelanggan)) {
@@ -34,6 +37,7 @@ class Pengajuan extends Component
             $this->filteredPelanggan = [];
         }
     }
+
 
     public function selectPelanggan($id, $nama)
     {
@@ -55,24 +59,35 @@ class Pengajuan extends Component
 
     public function store()
     {
-        $this->validate([
-            'pelanggan_id' => 'required',
-            'nama_barang' => 'required',
-            'jumlah' => 'required|numeric',
-        ]);
+        try {
+            $this->validate([
+                'pelanggan_id' => 'required',
+                'nama_barang' => 'required',
+                'jumlah' => 'required|numeric',
+            ]);
 
-        ModelsPengajuan::create([
-            'pelanggan_id' => $this->pelanggan_id,
-            'user_id' => Auth::id(),
-            'nama_barang' => $this->nama_barang,
-            'jumlah' => $this->jumlah,
-            'tgl_pengajuan' => now(),
-            'status' => '0',
-        ]);
+            ModelsPengajuan::create([
+                'pelanggan_id' => $this->pelanggan_id,
+                'user_id' => Auth::id(),
+                'nama_barang' => $this->nama_barang,
+                'jumlah' => $this->jumlah,
+                'tgl_pengajuan' => now(),
+                'status' => '0',
+            ]);
 
-        session()->flash('success', 'Pengajuan berhasil ditambahkan');
-        $this->dispatch('close-pengajuan-modal');
-        $this->resetInputFields();
+            Log::info('Pengajuan baru ditambahkan', [
+                'user_id' => Auth::id(),
+                'nama_barang' => $this->nama_barang,
+                'jumlah' => $this->jumlah
+            ]);
+
+            session()->flash('success', 'Pengajuan berhasil ditambahkan');
+            $this->dispatch('close-pengajuan-modal');
+            $this->resetInputFields();
+        } catch (\Exception $e) {
+            Log::error('Gagal menambahkan pengajuan', ['error' => $e->getMessage()]);
+            session()->flash('error', 'Terjadi kesalahan saat menambahkan pengajuan.');
+        }
     }
     public function edit($pengajuan_id)
     {
@@ -87,18 +102,30 @@ class Pengajuan extends Component
 
     public function update()
     {
-        $this->validate([
-            'nama_barang' => 'required|string|max:255',
-            'jumlah' => 'required|integer|min:1',
-        ]);
+        try {
+            $this->validate([
+                'nama_barang' => 'required|string|max:255',
+                'jumlah' => 'required|integer|min:1',
+            ]);
 
-        ModelsPengajuan::where('pengajuan_id', $this->pengajuan_id)->update([
-            'nama_barang' => $this->nama_barang,
-            'jumlah' => $this->jumlah,
-        ]);
+            ModelsPengajuan::where('pengajuan_id', $this->pengajuan_id)->update([
+                'nama_barang' => $this->nama_barang,
+                'jumlah' => $this->jumlah,
+            ]);
 
-        session()->flash('success', 'Pengajuan berhasil diperbarui.');
-        $this->dispatch('close-edit-modal');
+            Log::info('Pengajuan diperbarui', [
+                'user_id' => Auth::id(),
+                'pengajuan_id' => $this->pengajuan_id,
+                'nama_barang' => $this->nama_barang,
+                'jumlah' => $this->jumlah
+            ]);
+
+            session()->flash('success', 'Pengajuan berhasil diperbarui.');
+            $this->dispatch('close-edit-modal');
+        } catch (\Exception $e) {
+            Log::error('Gagal memperbarui pengajuan', ['error' => $e->getMessage()]);
+            session()->flash('error', 'Terjadi kesalahan saat memperbarui pengajuan.');
+        }
     }
     private function resetInputFields()
     {
@@ -114,6 +141,12 @@ class Pengajuan extends Component
             $pengajuan->status = $pengajuan->status == '1' ? '0' : '1';
             $pengajuan->save();
         }
+
+        Log::info('Status pengajuan diubah', [
+            'user_id' => Auth::id(),
+            'pengajuan_id' => $pengajuan_id,
+            'status_baru' => $pengajuan->status
+        ]);
     }
 
     public function closeEditModal()
@@ -129,29 +162,56 @@ class Pengajuan extends Component
 
     public function deletePengajuan()
     {
-        if ($this->pengajuan_id) {
-            ModelsPengajuan::where('pengajuan_id', $this->pengajuan_id)->delete();
-            session()->flash('success', 'Data pengajuan berhasil dihapus.');
+        try {
+            if ($this->pengajuan_id) {
+                ModelsPengajuan::where('pengajuan_id', $this->pengajuan_id)->delete();
 
-            // Reset ID dan tutup modal
-            $this->pengajuan_id = null;
-            $this->dispatch('close-hapus-modal');
+                Log::warning('Pengajuan dihapus', [
+                    'user_id' => Auth::id(),
+                    'pengajuan_id' => $this->pengajuan_id
+                ]);
+
+                session()->flash('success', 'Data pengajuan berhasil dihapus.');
+                $this->pengajuan_id = null;
+                $this->dispatch('close-hapus-modal');
+            }
+        } catch (\Exception $e) {
+            Log::error('Gagal menghapus pengajuan', ['error' => $e->getMessage()]);
+            session()->flash('error', 'Terjadi kesalahan saat menghapus pengajuan.');
         }
     }
     public function exportPdf()
     {
-        $pengajuans = ModelsPengajuan::all();
+        try {
+            $pengajuans = ModelsPengajuan::all();
+            $pdf = Pdf::loadView('livewire.admin.pengajuan.export-pdf', ['pengajuan' => $pengajuans]);
 
-        $pdf = Pdf::loadView('livewire.admin.pengajuan.export-pdf', ['pengajuan' => $pengajuans]);
+            Log::info('Export PDF dilakukan', [
+                'user_id' => Auth::id(),
+                'jumlah_pengajuan' => count($pengajuans)
+            ]);
 
-        return response()->streamDownload(function () use ($pdf) {
-            echo $pdf->output();
-        }, 'daftar_pengajuan.pdf');
+            return response()->streamDownload(function () use ($pdf) {
+                echo $pdf->output();
+            }, 'daftar_pengajuan.pdf');
+        } catch (\Exception $e) {
+            Log::error('Gagal mengekspor PDF', ['error' => $e->getMessage()]);
+            session()->flash('error', 'Terjadi kesalahan saat mengekspor PDF.');
+            return back();
+        }
     }
+
 
     public function exportExcel()
     {
-        return Excel::download(new PengajuanExport, 'daftar_pengajuan.xlsx');
+        try {
+            Log::info('Export Excel dilakukan', ['user_id' => Auth::id()]);
+            return Excel::download(new PengajuanExport, 'daftar_pengajuan.xlsx');
+        } catch (\Exception $e) {
+            Log::error('Gagal mengekspor Excel', ['error' => $e->getMessage()]);
+            session()->flash('error', 'Terjadi kesalahan saat mengekspor Excel.');
+            return back();
+        }
     }
     public function render()
     {

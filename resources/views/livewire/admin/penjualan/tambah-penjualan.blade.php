@@ -163,7 +163,7 @@
 
                                         <div class="col-sm-12 text-end">
                                             <button type="submit" class="btn btn-primary" wire:click.prevent="store">Tambah</button>
-                                            <a wire:navigate href="/pembelian" class="btn btn-outline-primary">Batal</a>
+                                            <a wire:navigate href="/penjualan" class="btn btn-outline-primary">Batal</a>
                                         </div>
 
                                     </form><!-- End General Form Elements -->
