@@ -12,6 +12,14 @@
                         </ol>
                     </nav>
                 </div><!-- End Page Title -->
+                <!-- Alert Success -->
+                @if (session()->has('success'))
+                <div class="alert alert-success alert-dismissible fade show ms-3" role="alert" style="min-width: 300px;">
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                @endif
+
                 @if (session()->has('error'))
                 <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
                     {{ session('error') }}
@@ -96,12 +104,6 @@
                                         </div>
 
                                     </form><!-- End General Form Elements -->
-
-                                    @if (session()->has('message'))
-                                    <div class="alert alert-success mt-3">
-                                        {{ session('message') }}
-                                    </div>
-                                    @endif
                                 </div>
                             </div>
                         </div>

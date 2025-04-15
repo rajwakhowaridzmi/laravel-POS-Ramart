@@ -13,6 +13,9 @@ class Pembelian extends Component
     public $pembelian_id;
     protected $paginationTheme = 'bootstrap';
 
+      /**
+     * Merender data pembelian dan mengirimkannya ke tampilan.
+     */
     public function render()
     {
         $pembelians = ModelsPembelian::orderBy('tanggal_masuk', 'desc')->paginate(10);

@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user', function (Blueprint $table) {
-            $table->bigIncrements('user_id');
-            $table->string('nama', 50)->nullable();
-            $table->string('email')->unique();
-            $table->string('password', 255)->nullable();
-            $table->enum('role', ['0','1'])->nullable();
+        Schema::create('activity_logs', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->string('activity'); // Deskripsi aktivitas, misalnya "Tambah Barang"
+            $table->text('data')->nullable(); // Data yang dikirim
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user');
+        Schema::dropIfExists('activity_logs');
     }
 };

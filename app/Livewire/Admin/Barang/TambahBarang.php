@@ -14,6 +14,12 @@ class TambahBarang extends Component
     public $persentase = '';
 
     use WithFileUploads;
+
+    /**
+     * Menyimpan data barang baru ke database.
+     * Melakukan validasi input, menyimpan gambar (jika ada), 
+     * lalu memasukkan data ke tabel `barang` dalam sebuah transaksi.
+     */
     public function store()
     {
         // Validasi input
@@ -33,19 +39,16 @@ class TambahBarang extends Component
             'gambar.max' => 'Ukuran gambar maksimal 2MB',
         ]);
 
-        // Ambil user_id dari auth
         $user_id = Auth::user()->user_id;
 
         $gambarPath = null;
         if ($this->gambar) {
-            $gambarPath = $this->gambar->store('barang', 'public'); // Simpan ke storage/public/barang
+            $gambarPath = $this->gambar->store('barang', 'public');
         }
 
-
-        DB::beginTransaction(); // Memulai transaksi
+        DB::beginTransaction();
 
         try {
-            // Menyimpan data barang ke dalam database
             DB::table('barang')->insert([
                 'kode_barang' => $this->kode_barang,
                 'nama_barang' => $this->nama_barang,
@@ -61,22 +64,24 @@ class TambahBarang extends Component
                 'updated_at' => now(),
             ]);
 
-            DB::commit(); // Menyimpan perubahan jika tidak ada error
+            DB::commit();
 
             session()->flash('success', 'Barang berhasil ditambahkan!');
             return redirect()->route('barang');
         } catch (\Exception $e) {
-            DB::rollBack(); // Membatalkan perubahan jika terjadi error
+            DB::rollBack();
 
             session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
-            return back(); // Kembali ke halaman sebelumnya
+            return back();
         }
     }
 
-    // Render untuk menampilkan data produk yang ada
+    /**
+     * Menampilkan form tambah barang dan data produk untuk dropdown
+     */
     public function render()
     {
-        $produks = Produk::all(); // Ambil semua data produk
+        $produks = Produk::all();
         return view('livewire.admin.barang.tambah-barang', ['produk' => $produks]);
     }
 }

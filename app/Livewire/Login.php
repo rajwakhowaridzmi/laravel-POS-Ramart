@@ -11,11 +11,12 @@ class Login extends Component
 {
     #[Layout('components.layouts.login')]
 
-    public $email, $password;
+    public $email, $password, $error = false;
     public function render()
     {
         return view('livewire.login');
     }
+
     public function login()
     {
         $user = User::where('email', $this->email)
@@ -24,7 +25,6 @@ class Login extends Component
 
         if ($user) {
             Auth::login($user);
-
             return match ($user->role) {
                 '0' => redirect()->route('dashboard-admin'),
                 '1' => redirect()->route('dashboard-kasir'),
@@ -32,6 +32,7 @@ class Login extends Component
             };
         }
 
+        $this->error = true;
         session()->flash('error', 'Email atau Password salah');
     }
 }

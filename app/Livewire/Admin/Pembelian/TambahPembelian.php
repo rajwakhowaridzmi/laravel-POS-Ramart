@@ -18,35 +18,57 @@ class TambahPembelian extends Component
     public $searchPemasok = '', $filteredPemasok = [];
     public $searchBarang = '', $filteredBarang = [], $selectedBarang = [];
 
+    /**
+     * Mengambil data pemasok dan barang saat komponen dimuat
+     */
     public function mount()
     {
         $this->pemasok = Pemasok::all();
         $this->barang = Barang::all();
     }
+    /**
+     * Pencarian pemasok secara real-time
+     */
     public function updatedSearchPemasok()
     {
         $this->filteredPemasok = !empty($this->searchPemasok)
             ? Pemasok::where('nama_pemasok', 'like', '%' . $this->searchPemasok . '%')->get()
             : ['Pemasok Tidak DItemukan'];
     }
+
+    /**
+     * Memilih pemasok dari hasil pencarian
+     */
     public function selectPemasok($pemasok_id, $nama_pemasok)
     {
         $this->pemasok_id = $pemasok_id;
         $this->searchPemasok = $nama_pemasok;
         $this->filteredPemasok = [];
     }
+
+    /**
+     * Reset pilihan pemasok
+     */
     public function resetPemasok()
     {
         $this->pemasok_id = null;
         $this->searchPemasok = '';
         $this->filteredPemasok = [];
     }
+
+    /**
+     * Pencarian barang secara real-time
+     */
     public function updatedSearchBarang()
     {
         $this->filteredBarang = !empty($this->searchBarang)
             ? Barang::where('nama_barang', 'like', '%' . $this->searchBarang . '%')->get()
             : [];
     }
+
+    /**
+     * Menambahkan barang ke daftar pembelian
+     */
     public function selectBarang($barang_id, $nama_barang)
     {
         if (!collect($this->selectedBarang)->contains('barang_id', $barang_id)) {
@@ -62,11 +84,19 @@ class TambahPembelian extends Component
         $this->searchBarang = '';
         $this->filteredBarang = [];
     }
+
+    /**
+     * Menghapus barang dari daftar pembelian
+     */
     public function resetBarang($index)
     {
         unset($this->selectedBarang[$index]);
         $this->selectedBarang = array_values($this->selectedBarang);
     }
+
+    /**
+     * Mengupdate subtotal barang ketika harga/jumlah berubah
+     */
     public function updatedSelectedBarang($value, $key)
     {
         list($index, $field) = explode('.', $key);
@@ -79,10 +109,19 @@ class TambahPembelian extends Component
         $this->total = $this->getTotalProperty();
     }
 
+    /**
+     * Menghitung total keseluruhan pembelian
+     */
     public function getTotalProperty()
     {
         return array_sum(array_column($this->selectedBarang, 'sub_total'));
     }
+
+    /**
+     * Menyimpan data pembelian dan detail barang ke dalam database.
+     * Termasuk membuat kode pembelian otomatis, update stok,
+     * dan menghitung harga jual berdasarkan persentase.
+     */
 
     public function store()
     {
@@ -93,7 +132,7 @@ class TambahPembelian extends Component
             'selectedBarang.*.harga_beli' => 'required|numeric|min:1',
             'selectedBarang.*.jumlah' => 'required|numeric|min:1',
         ]);
-    
+
         try {
             DB::beginTransaction();
 
@@ -101,14 +140,14 @@ class TambahPembelian extends Component
             $lastKode = Pembelian::whereDate('created_at', now())->latest('created_at')->first();
             $nomorUrut = $lastKode ? ((int) substr($lastKode->kode_masuk, -4) + 1) : 1;
             $kodeMasuk = 'PBL' . $tanggal . str_pad($nomorUrut, 4, '0', STR_PAD_LEFT);
-    
+
             $pembelian = Pembelian::create([
                 'kode_masuk' => $kodeMasuk,
                 'tanggal_masuk' => now()->format('Ymd'),
                 'pemasok_id' => $this->pemasok_id,
                 'user_id' => Auth::id(),
             ]);
-    
+
             foreach ($this->selectedBarang as $barang) {
                 DetailPembelian::create([
                     'pembelian_id' => $pembelian->pembelian_id,
@@ -117,22 +156,22 @@ class TambahPembelian extends Component
                     'jumlah' => $barang['jumlah'],
                     'sub_total' => $barang['sub_total'],
                 ]);
-    
+
                 $barangData = Barang::where('barang_id', $barang['barang_id'])->first();
-    
+
                 $harga_beli_baru = $barang['harga_beli'];
                 $persentase = $barangData->persentase;
                 $harga_jual_baru = $harga_beli_baru * (1 + ($persentase / 100));
-    
+
                 $barangData->update([
                     'stok' => DB::raw('stok + ' . $barang['jumlah']),
                     'harga_beli' => $harga_beli_baru,
                     'harga_jual' => $harga_jual_baru,
                 ]);
             }
-    
+
             DB::commit();
-    
+
             session()->flash('success', 'Pembelian berhasil disimpan dengan kode ' . $kodeMasuk);
             return redirect()->route('pembelian');
         } catch (\Exception $e) {
@@ -140,7 +179,10 @@ class TambahPembelian extends Component
             session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
-    
+
+    /**
+     * Merender tampilan form tambah pembelian
+     */
     public function render()
     {
         return view('livewire.admin.pembelian.tambah-pembelian');

@@ -136,63 +136,73 @@
                 </div>
 
                 <script>
-                  document.addEventListener("DOMContentLoaded", () => {
+                  window.addEventListener('chartDataUpdated', () => {
                     let chartElement = document.querySelector("#reportsChart");
-                    let chartData = JSON.parse(chartElement.getAttribute("data-chart"));
+                    if (chartElement) {
+                      chartElement.innerHTML = ""; // Clear chart lama
+                      let chartData = JSON.parse(chartElement.getAttribute("data-chart"));
 
-                    new ApexCharts(chartElement, {
-                      series: [{
-                          name: 'Jumlah Transaksi Penjualan',
-                          data: chartData.jumlah_transaksi_penjualan
-                        },
-                        {
-                          name: 'Jumlah Transaksi Pembelian',
-                          data: chartData.jumlah_transaksi_pembelian
-                        },
-                        {
-                          name: 'Pendapatan (Rp)',
-                          data: chartData.pendapatan
-                        }
-                      ],
-                      chart: {
-                        height: 350,
-                        type: 'area',
-                        toolbar: {
-                          show: false
-                        }
-                      },
-                      markers: {
-                        size: 4
-                      },
-                      colors: ['#4154f1', '#2eca6a', '#f14141'], // Warna berbeda
-                      fill: {
-                        type: "gradient",
-                        gradient: {
-                          shadeIntensity: 1,
-                          opacityFrom: 0.3,
-                          opacityTo: 0.4,
-                          stops: [0, 90, 100]
-                        }
-                      },
-                      dataLabels: {
-                        enabled: false
-                      },
-                      stroke: {
-                        curve: 'smooth',
-                        width: 2
-                      },
-                      xaxis: {
-                        type: 'datetime',
-                        categories: chartData.dates
-                      },
-                      tooltip: {
-                        x: {
-                          format: 'yyyy-MM-dd'
-                        }
-                      }
-                    }).render();
+                      new ApexCharts(chartElement, {
+  series: [
+    {
+      name: 'Jumlah Transaksi Penjualan',
+      data: chartData.jumlah_transaksi_penjualan
+    },
+    {
+      name: 'Jumlah Transaksi Pembelian',
+      data: chartData.jumlah_transaksi_pembelian
+    },
+    {
+      name: 'Pendapatan (Rp)',
+      data: chartData.pendapatan
+    }
+  ],
+  chart: {
+    height: 350,
+    type: 'area',
+    toolbar: {
+      show: false
+    }
+  },
+  dataLabels: {
+    enabled: false
+  },
+  markers: {
+    size: 5,
+    colors: ['#4154f1', '#2eca6a', '#f14141'],
+    strokeColors: '#fff',
+    strokeWidth: 2
+  },
+  colors: ['#4154f1', '#2eca6a', '#f14141'],
+  fill: {
+    type: "gradient",
+    gradient: {
+      shadeIntensity: 1,
+      opacityFrom: 0.3,
+      opacityTo: 0.4,
+      stops: [0, 90, 100]
+    }
+  },
+  stroke: {
+    curve: 'smooth',
+    width: 2
+  },
+  xaxis: {
+    type: 'datetime',
+    categories: chartData.dates
+  },
+  tooltip: {
+    x: {
+      format: 'yyyy-MM-dd'
+    }
+  }
+}).render();
+
+                    }
                   });
                 </script>
+
+
               </div>
             </div>
           </div>

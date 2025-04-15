@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('produk_id')->nullable();
             $table->string('nama_barang', 50)->nullable();
             $table->double('harga_beli')->nullable();
-            $table->int('persentase')->nullable();
+            $table->integer('persentase')->nullable();
             $table->double('harga_jual')->nullable();
             $table->integer('stok')->nullable();
             $table->enum('status_barang', ['0','1']);

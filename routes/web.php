@@ -18,10 +18,12 @@ use App\Livewire\Admin\Pengajuan\Pengajuan;
 use App\Livewire\Admin\Pengajuan\TambahPengajuan;
 use App\Livewire\Admin\Penjualan\DetailPenjualan;
 use App\Livewire\Admin\Penjualan\Penjualan;
+use App\Livewire\Admin\Penjualan\StrukPenjualan;
 use App\Livewire\Admin\Penjualan\TambahPenjualan;
 use App\Livewire\Admin\Produk\EditProduk;
 use App\Livewire\Admin\Produk\Produk;
 use App\Livewire\Admin\Produk\TambahProduk;
+use App\Livewire\Admin\User\TambahUser;
 use App\Livewire\Admin\User\User;
 use App\Livewire\Admin\Vendor\EditPemasok;
 use App\Livewire\Admin\Vendor\Pemasok as VendorPemasok;
@@ -72,6 +74,10 @@ Route::middleware(['auth', RoleMiddleware::class.':0'])->group(function () {
     Route::get('/laporan-pembelian', LaporanPembelian::class)->name('laporan_pembelian');
 
     Route::get('/pengajuan', Pengajuan::class)->name('pengajuan');
+
+    Route::get('/struk/${penjualan_id}', StrukPenjualan::class)->name('struk-penjualan');
+
+    Route::get('/tambah-user', TambahUser::class)->name('tambah-user');
 });
 
 Route::middleware(['auth', RoleMiddleware::class.':1'])->group(function () {

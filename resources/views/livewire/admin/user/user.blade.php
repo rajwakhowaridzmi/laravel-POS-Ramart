@@ -29,7 +29,7 @@
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <h5 class="card-title">Produk</h5>
-                                        <button class="btn btn-primary" wire:navigate href="/tambah-produk">Tambah Produk</button>
+                                        <button class="btn btn-primary" wire:navigate href="/tambah-user">Tambah User</button>
                                     </div>
                                     <table class="table table-hover">
                                         <thead>

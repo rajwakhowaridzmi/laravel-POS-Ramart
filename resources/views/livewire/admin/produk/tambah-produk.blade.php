@@ -13,6 +13,9 @@
                     </nav>
                 </div><!-- End Page Title -->
 
+                <x-alert type="success" :message="session('success')" />
+                <x-alert type="error" :message="session('error')" />
+                
                 <section class="section">
                     <div class="row">
                         <div class="col-lg-12">
@@ -38,12 +41,6 @@
                                         </div>
 
                                     </form><!-- End General Form Elements -->
-
-                                    @if (session()->has('message'))
-                                    <div class="alert alert-success mt-3">
-                                        {{ session('message') }}
-                                    </div>
-                                    @endif
                                 </div>
                             </div>
                         </div>

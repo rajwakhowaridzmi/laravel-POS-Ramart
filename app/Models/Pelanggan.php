@@ -19,12 +19,11 @@ class Pelanggan extends Model
         'no_telp',
         'email',
         'member_status',
-        'total_poin'
     ];
     public function pelanggan() {
         return $this->hasMany(Pelanggan::class, 'pelanggan_id', 'pelanggan_id');
     }
-    public function poinPelanggan() {
-        return $this->hasMany(PoinPelanggan::class, 'pelanggan_id', 'pelanggan_id');
-    }
+    // public function poinPelanggan() {
+    //     return $this->hasMany(PoinPelanggan::class, 'pelanggan_id', 'pelanggan_id');
+    // }
 }

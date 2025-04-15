@@ -3,13 +3,19 @@
 namespace App\Livewire\Admin\Pelanggan;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
 class TambahPelanggan extends Component
 {
     public $nama, $alamat, $no_telp, $email;
 
-    public function store() {
+    /**
+     * Menyimpan data pelanggan baru ke database.
+     * Melakukan validasi input, generate kode pelanggan, dan menyimpan data ke tabel.
+     */
+    public function store()
+    {
         $this->validate([
             'nama' => 'required|string|max:50',
             'alamat' => 'required|string|max:200',
@@ -29,34 +35,51 @@ class TambahPelanggan extends Component
 
         $tahunSekarang = date('Y');
 
-        $noUrutBaru = DB::table('pelanggan')
-        ->select(DB::raw("IFNULL(MAX(SUBSTRING(kode_pelanggan, 8, 5)), 0) + 1 AS no_urut"))
-        ->whereRaw("SUBSTRING(kode_pelanggan, 4, 4) = ?", [$tahunSekarang])
-        ->value('no_urut');
+        try {
+            $noUrutBaru = DB::table('pelanggan')
+                ->select(DB::raw("IFNULL(MAX(SUBSTRING(kode_pelanggan, 8, 5)), 0) + 1 AS no_urut"))
+                ->whereRaw("SUBSTRING(kode_pelanggan, 4, 4) = ?", [$tahunSekarang])
+                ->value('no_urut');
 
-        $noUrutBaru = str_pad($noUrutBaru, 5, '0', STR_PAD_LEFT);
+            $noUrutBaru = str_pad($noUrutBaru, 5, '0', STR_PAD_LEFT);
 
-        $kodePelanggan = "PLG" . $tahunSekarang . $noUrutBaru;
+            $kodePelanggan = "PLG" . $tahunSekarang . $noUrutBaru;
 
-        DB::table('pelanggan')->insert([
-            'kode_pelanggan' => $kodePelanggan,
-            'nama' => $this->nama,
-            'alamat' => $this->alamat,
-            'no_telp' => $this->no_telp,
-            'email' => $this->email,
-            'member_status' => '1',
-            'total_poin' => 0,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+            DB::table('pelanggan')->insert([
+                'kode_pelanggan' => $kodePelanggan,
+                'nama' => $this->nama,
+                'alamat' => $this->alamat,
+                'no_telp' => $this->no_telp,
+                'email' => $this->email,
+                'member_status' => '1',
+                'total_poin' => 0,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
 
-        session()->flash('success', 'Data Berhasil Ditambahkan');
-        return redirect()->route('pelanggan');
+            session()->flash('success', 'Data Berhasil Ditambahkan');
 
+            return redirect()->route('pelanggan');
+        } catch (\Exception $e) {
+            Log::error('Gagal menambahkan data pelanggan', [
+                'error' => $e->getMessage(),
+                'input' => [
+                    'nama' => $this->nama,
+                    'alamat' => $this->alamat,
+                    'no_telp' => $this->no_telp,
+                    'email' => $this->email,
+                ]
+            ]);
+
+            session()->flash('error', 'Terjadi kesalahan saat menambahkan data.');
+        }
     }
+
+    /**
+     * Menampilkan form untuk tambah pelanggan
+     */
     public function render()
     {
         return view('livewire.admin.pelanggan.tambah-pelanggan');
     }
-
 }

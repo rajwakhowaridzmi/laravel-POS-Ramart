@@ -13,13 +13,8 @@
                             </ol>
                         </nav>
                     </div>
-                    <!-- Alert Success -->
-                    @if (session()->has('success'))
-                    <div class="alert alert-success alert-dismissible fade show ms-3" role="alert" style="min-width: 300px;">
-                        {{ session('success') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                    @endif
+                    <x-alert type="success" :message="session('success')" />
+                    <x-alert type="error" :message="session('error')" />
                 </div>
 
                 <section class="section">

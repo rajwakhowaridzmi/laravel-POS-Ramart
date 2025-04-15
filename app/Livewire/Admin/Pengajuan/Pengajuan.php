@@ -21,14 +21,18 @@ class Pengajuan extends Component
     public $filteredPelanggan = [];
     protected $paginationTheme = 'bootstrap';
 
-    //function untuk memunculkan modal
+    /**
+     * Menampilkan modal untuk menambahkan pengajuan baru.
+     */
     public function showModal()
     {
         $this->resetInputFields();
         $this->dispatch('show-pengajuan-modal');
     }
 
-    //function untuk mencari pelanggan
+    /**
+     * Memperbarui daftar pelanggan yang difilter berdasarkan input pencarian.
+     */
     public function updatedSearchPelanggan()
     {
         if (!empty($this->searchPelanggan)) {
@@ -38,7 +42,9 @@ class Pengajuan extends Component
         }
     }
 
-
+    /**
+     * Memilih pelanggan dari hasil pencarian dan mengisi input.
+     */
     public function selectPelanggan($id, $nama)
     {
         $this->pelanggan_id = $id;
@@ -46,16 +52,28 @@ class Pengajuan extends Component
         $this->filteredPelanggan = [];
     }
 
+    /**
+     * Mereset data pelanggan yang dipilih.
+     */
     public function resetPelanggan()
     {
         $this->pelanggan_id = null;
         $this->searchPelanggan = '';
     }
 
+    /**
+     * Mereset seluruh form input pengajuan.
+     */
     public function resetForm()
     {
         $this->reset(['pelanggan_id', 'searchPelanggan', 'nama_barang', 'jumlah']);
     }
+
+    /**
+     * Menyimpan data pengajuan baru ke database.
+     * Melakukan validasi input, menyimpan data pengajuan dengan status awal '0',
+     * mencatat log aktivitas, dan menampilkan notifikasi sukses atau gagal.
+     */
 
     public function store()
     {
@@ -89,6 +107,9 @@ class Pengajuan extends Component
             session()->flash('error', 'Terjadi kesalahan saat menambahkan pengajuan.');
         }
     }
+    /**
+     * Menampilkan modal edit dan mengisi form dengan data pengajuan yang dipilih.
+     */
     public function edit($pengajuan_id)
     {
         $pengajuan = ModelsPengajuan::findOrFail($pengajuan_id);
@@ -100,6 +121,9 @@ class Pengajuan extends Component
         $this->dispatch('show-edit-modal');
     }
 
+    /**
+     * Memperbarui data pengajuan yang dipilih.
+     */
     public function update()
     {
         try {
@@ -127,39 +151,63 @@ class Pengajuan extends Component
             session()->flash('error', 'Terjadi kesalahan saat memperbarui pengajuan.');
         }
     }
+
+    /**
+     * Mereset input field pengajuan ke nilai awal.
+     */
     private function resetInputFields()
     {
         $this->pelanggan_id = null;
         $this->nama_barang = null;
         $this->jumlah = null;
     }
+    /**
+     * Mengubah status terpenuhi atau tidak dari pengajuan.
+     */
     public function toggleTerpenuhi($pengajuan_id)
     {
-        $pengajuan = ModelsPengajuan::find($pengajuan_id);
+        try {
+            $pengajuan = ModelsPengajuan::findOrFail($pengajuan_id);
 
-        if ($pengajuan) {
             $pengajuan->status = $pengajuan->status == '1' ? '0' : '1';
             $pengajuan->save();
-        }
 
-        Log::info('Status pengajuan diubah', [
-            'user_id' => Auth::id(),
-            'pengajuan_id' => $pengajuan_id,
-            'status_baru' => $pengajuan->status
-        ]);
+            Log::info('Status pengajuan diubah', [
+                'user_id' => Auth::id(),
+                'pengajuan_id' => $pengajuan_id,
+                'status_baru' => $pengajuan->status
+            ]);
+            session()->flash('success', 'Status pengajuan berhasil diubah.');
+        } catch (\Exception $e) {
+            Log::error('Gagal mengubah status pengajuan', [
+                'user_id' => Auth::id(),
+                'pengajuan_id' => $pengajuan_id,
+                'error' => $e->getMessage()
+            ]);
+            session()->flash('error', 'Terjadi kesalahan saat mengubah status pengajuan.');
+        }
     }
 
+    /**
+     * Menutup modal edit pengajuan.
+     */
     public function closeEditModal()
     {
         $this->dispatch('close-edit-modal');
     }
 
+    /**
+     * Menampilkan modal konfirmasi hapus pengajuan.
+     */
     public function confirmDelete($id)
     {
         $this->pengajuan_id = $id;
         $this->dispatch('show-hapus-modal');
     }
 
+    /**
+     * Menghapus data pengajuan dari database.
+     */
     public function deletePengajuan()
     {
         try {
@@ -180,6 +228,10 @@ class Pengajuan extends Component
             session()->flash('error', 'Terjadi kesalahan saat menghapus pengajuan.');
         }
     }
+
+    /**
+     * Mengekspor data pengajuan ke file PDF.
+     */
     public function exportPdf()
     {
         try {
@@ -201,7 +253,9 @@ class Pengajuan extends Component
         }
     }
 
-
+    /**
+     * Mengekspor data pengajuan ke file Excel.
+     */
     public function exportExcel()
     {
         try {
@@ -213,6 +267,10 @@ class Pengajuan extends Component
             return back();
         }
     }
+
+    /**
+     * Merender halaman pengajuan beserta datanya.
+     */
     public function render()
     {
         $pengajuans = ModelsPengajuan::paginate(5);

@@ -1,4 +1,24 @@
 <div>
+    <style>
+        .modal-content {
+            border: none !important;
+            box-shadow: none !important;
+        }
+
+        @media print {
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family: 'Courier New', monospace;
+                font-size: 13px;
+                width: 100%;
+            }
+        }
+    </style>
     <div>
         <div>
             <main id="main" class="main">
@@ -52,8 +72,8 @@
                                                     @if(!empty($filteredPelanggan) && !empty($searchPelanggan) && !$pelanggan_id)
                                                     <div class="dropdown-menu w-100 show" style="max-height: 200px; overflow-y: auto;">
                                                         @foreach ($filteredPelanggan as $pelanggans)
-                                                        <a class="dropdown-item" href="#" wire:click.prevent="selectPelanggan('{{ $pelanggans->pelanggan_id }}', '{{ $pelanggans->nama }}')">
-                                                            {{ $pelanggans->nama }}
+                                                        <a class="dropdown-item" href="#" wire:click.prevent="selectPelanggan('{{ $pelanggans->pelanggan_id }}', '{{ $pelanggans->nama }} | {{ $pelanggans->no_telp }}')">
+                                                            {{ $pelanggans->nama }} | {{ $pelanggans->no_telp }}
                                                         </a>
                                                         @endforeach
                                                     </div>
@@ -68,13 +88,25 @@
 
                                         <div class="row mb-3">
                                             <label for="barang_id" class="col-sm-2 col-form-label">Barang</label>
+
                                             <div class="col-sm-10">
-                                                <div class="dropdown">
+                                                <!-- Input Scan Kode Barang -->
+                                                <div class="input-group mb-2">
+                                                    <input
+                                                        type="text"
+                                                        wire:model="kodeBarangInput"
+                                                        wire:keydown.enter="tambahBarangDenganKode"
+                                                        placeholder="Scan Kode Barang"
+                                                        class="form-control" />
+                                                </div>
+
+                                                <!-- Input Pencarian Nama Barang -->
+                                                <div class="dropdown mb-1 mt-3 ">
                                                     <div class="input-group">
                                                         <input type="text"
                                                             wire:model.live="searchBarang"
                                                             class="form-control"
-                                                            placeholder="Cari Barang...">
+                                                            placeholder="Cari Nama Barang...">
                                                     </div>
 
                                                     @if(!empty($filteredBarang) && !empty($searchBarang))
@@ -82,7 +114,7 @@
                                                         @foreach ($filteredBarang as $barang)
                                                         <a class="dropdown-item" href="#"
                                                             wire:click.prevent="selectBarang('{{ $barang->barang_id }}', '{{ $barang->nama_barang }}', {{ $barang->kode_barang }})">
-                                                            {{ $barang->nama_barang }} | {{ $barang->kode_barang }}
+                                                            {{ $barang->nama_barang }}
                                                         </a>
                                                         @endforeach
                                                     </div>
@@ -112,7 +144,7 @@
                                                                     <td class="text-center align-middle">
                                                                         <input type="number" class="form-control"
                                                                             wire:model.live.debounce.500ms="selectedBarang.{{ $index }}.jumlah"
-                                                                            placeholder="Masukkan Jumlah Barang"
+                                                                            placeholder="Jumlah"
                                                                             min="1"
                                                                             max="{{ $barang['stok'] }}"
                                                                             oninput="this.value = Math.min(this.value, this.max)">
@@ -134,8 +166,7 @@
                                                         </table>
                                                     </div>
 
-
-                                                    <!-- Total Keseluruhan -->
+                                                    <!-- Total -->
                                                     <div class="mt-3 p-2">
                                                         <h5 class="text-end">Total: <strong>Rp {{ number_format($total, 0, ',', '.') }}</strong></h5>
                                                     </div>
@@ -143,6 +174,7 @@
                                                 @endif
                                             </div>
                                         </div>
+
 
                                         <div class="row mb-3">
                                             <label for="jumlah_bayar" class="col-sm-2 col-form-label">Jumlah Bayar</label>
@@ -162,7 +194,7 @@
                                         </div>
 
                                         <div class="col-sm-12 text-end">
-                                            <button type="submit" class="btn btn-primary" wire:click.prevent="store">Tambah</button>
+                                            <a type="submit" class="btn btn-primary" wire:click.prevent="store">Tambah</a>
                                             <a wire:navigate href="/penjualan" class="btn btn-outline-primary">Batal</a>
                                         </div>
 
@@ -179,7 +211,30 @@
                         </div>
                     </div>
                 </section>
+                @if($showStruk)
+                <div class="modal fade show d-block" tabindex="-1" role="dialog" style="background-color: rgba(0,0,0,0.5);">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                @include('livewire.admin.penjualan.struk-penjualan', $penjualanData)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endif
             </main>
         </div>
     </div>
+
 </div>
+
+<script>
+    window.addEventListener('cetak-struk', function() {
+        setTimeout(() => {
+            window.print();
+            setTimeout(() => {
+                window.location.href = "/penjualan";
+            }, 500);
+        }, 500);
+    });
+</script>

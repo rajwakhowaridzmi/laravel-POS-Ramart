@@ -126,7 +126,12 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
-
+        
+        'activitylog' => [
+            'driver' => 'custom',
+            'via' => App\Logging\ActivityLogger::class,
+            'level' => 'info',
+        ],
     ],
 
 ];

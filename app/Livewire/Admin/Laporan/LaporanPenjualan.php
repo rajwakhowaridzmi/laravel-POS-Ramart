@@ -50,8 +50,8 @@ class LaporanPenjualan extends Component
             ->when($this->startDate && $this->endDate, function ($query) {
                 $query->whereBetween('tgl_faktur', [$this->startDate, $this->endDate]);
             })
-            ->orderBy('tgl_faktur', 'desc')
-            ->paginate(5);
+            ->orderBy('no_faktur', 'desc')
+            ->paginate(10);
 
         return view('livewire.admin.laporan.laporan-penjualan', ['penjualan' => $penjualans]);
     }

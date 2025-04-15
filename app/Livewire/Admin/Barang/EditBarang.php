@@ -14,6 +14,11 @@ class EditBarang extends Component
 {
     use WithFileUploads;
     public $barang_id, $kode_barang, $nama_barang, $produk_id, $stok, $status_barang, $user_id, $persentase, $harga_beli, $gambar, $gambar_lama;
+
+    /**
+     * Mengambil data barang berdasarkan ID.
+     * Jika barang tidak ditemukan, arahkan kembali ke halaman daftar barang.
+     */
     public function mount($barang_id)
     {
         $barang = Barang::find($barang_id);
@@ -29,6 +34,13 @@ class EditBarang extends Component
         $this->harga_beli = $barang->harga_beli;
         $this->gambar_lama = $barang->gambar;
     }
+
+    /**
+     * Memperbarui data barang yang sudah ada di database.
+     * Melakukan validasi input, memeriksa keberadaan barang, 
+     * mengelola gambar baru (jika diunggah), menghitung harga jual baru 
+     * berdasarkan persentase, lalu memperbarui data di tabel `barang`.
+     */
     public function update()
     {
         $this->validate([
@@ -48,22 +60,19 @@ class EditBarang extends Component
             'persentase.required' => 'Persentase tidak boleh kosong',
         ]);
 
-
         $barang = Barang::find($this->barang_id);
 
-        
-        
         if (!$barang) {
             session()->flash('error', 'Data tidak ditemukan.');
             return redirect()->route('barang');
         }
-        
+
         if ($this->gambar instanceof TemporaryUploadedFile) {
             $gambarPath = $this->gambar->store('barang', 'public');
         } else {
             $gambarPath = $this->gambar_lama;
         }
-        
+
         $harga_jual_baru = $this->harga_beli * (1 + $this->persentase / 100);
         DB::table('barang')
             ->where('barang_id', $this->barang_id)
@@ -81,6 +90,10 @@ class EditBarang extends Component
         session()->flash('success', 'Data berhasil diperbarui.');
         return redirect()->route('barang');
     }
+
+    /**
+     * Merender tampilan halaman edit barang dengan mengambil data produk dari database.
+     */
     public function render()
     {
         $produks = Produk::all();
